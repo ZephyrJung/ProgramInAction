@@ -78,3 +78,79 @@ spring-webmvc-portlet（也称为web-portlet模块）提供了在Portlet环境�
 #### Test
 
 spring-test提供了单元测试和Spring组件与JUnit或TestNG测试的集成。提供加载Spring应用上下文和上下文缓存，提供模拟对象用来单独的测试代码
+
+### Usage scenarios
+
+#### Dependency Management and Naming Conventions
+
+#### Logging
+
+##### Not Using Commons Logging
+
+##### Using SLF4J
+
+```xml
+<dependencies>
+ <dependency>
+ <groupId>org.springframework</groupId>
+ <artifactId>spring-core</artifactId>
+ <version>4.3.6.RELEASE</version>
+ <exclusions>
+ <exclusion>
+ <groupId>commons-logging</groupId>
+ <artifactId>commons-logging</artifactId>
+ </exclusion>
+ </exclusions>
+ </dependency>
+ <dependency>
+ <groupId>org.slf4j</groupId>
+ <artifactId>jcl-over-slf4j</artifactId>
+ <version>1.5.8</version>
+ </dependency>
+ <dependency>
+ <groupId>org.slf4j</groupId>
+ <artifactId>slf4j-api</artifactId>
+ <version>1.5.8</version>
+ </dependency>
+ <dependency>
+ <groupId>org.slf4j</groupId>
+ <artifactId>slf4j-log4j12</artifactId>
+ <version>1.5.8</version>
+ </dependency>
+ <dependency>
+ <groupId>log4j</groupId>
+ <artifactId>log4j</artifactId>
+ <version>1.2.14</version>
+ </dependency>
+</dependencies>
+```
+
+##### Using Log4j
+
+使Log4j与默认的JCL依赖一同工作，只需要将Log4j放到classpath上，并提供配置文件（classpath根目录下的log4j.properties或log4j.xml）
+
+```xml
+<dependencies>
+ <dependency>
+ <groupId>org.springframework</groupId>
+ <artifactId>spring-core</artifactId>
+ <version>4.3.6.RELEASE</version>
+ </dependency>
+ <dependency>
+ <groupId>log4j</groupId>
+ <artifactId>log4j</artifactId>
+ <version>1.2.14</version>
+ </dependency>
+</dependencies>
+```
+
+下面是一个记录日志到控制台上的示例log4j.properties：
+
+```properties
+log4j.rootCategory=INFO,stdout
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+log4j.appender.stdout.layout.ConversionPattern=%d{ABSOLUTE} %5p %t %c{2}:%L - %m%n
+
+log4j.category.org.springframework.bean.factory=DEBUG
+```
