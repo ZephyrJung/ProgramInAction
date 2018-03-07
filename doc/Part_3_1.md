@@ -48,3 +48,124 @@ id属性的值被协作的对象引用。
 
 #### Instantiating a container
 
+```java
+ApplicationContext context = new ClassPathXmlApplicationContext(new String[] {"services.xml", "daos.xml"})
+```
+
+可以通过不同的外部资源来配置元信息，如文件系统，Java classpath等。
+
+下面是服务层对象配置文件示例：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans.xsd">
+ <!-- services -->
+ <bean id="petStore" class="org.springframework.samples.jpetstore.services.PetStoreServiceImpl">
+	 <property name="accountDao" ref="accountDao"/>
+	 <property name="itemDao" ref="itemDao"/>
+ <!-- additional collaborators and configuration for this bean go here -->
+ </bean>
+ <!-- more bean definitions for services go here -->
+</beans>
+```
+
+下面是数据访问对象文件示例：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans.xsd">
+ <bean id="accountDao"
+ class="org.springframework.samples.jpetstore.dao.jpa.JpaAccountDao">
+ <!-- additional collaborators and configuration for this bean go here -->
+ </bean>
+ <bean id="itemDao" class="org.springframework.samples.jpetstore.dao.jpa.JpaItemDao">
+ <!-- additional collaborators and configuration for this bean go here -->
+ </bean>
+ <!-- more bean definitions for data access objects go here -->
+</beans>
+```
+
+##### Composing XML-based configuration metadata
+
+多个配置文件可以代表多个逻辑模块划分，可以像上面那样传入多个资源位置，也可以在一个文件中引入多个配置文件，如：
+
+```xml
+<beans>
+ <import resource="services.xml"/>
+ <import resource="resources/messageSource.xml"/>
+ <import resource="/resources/themeSource.xml"/>
+ <bean id="bean1" class="..."/>
+ <bean id="bean2" class="..."/>
+</beans>
+```
+
+##### The Groovy Bean Definition DSL
+
+可以使用 Spring的Groovy Bean Definition DSL，来自Grails框架。通常配置在以".groovy"后缀的文件中，有如下格式：
+
+```groovy
+beans {
+ dataSource(BasicDataSource) {
+		driverClassName = "org.hsqldb.jdbcDriver"
+		url = "jdbc:hsqldb:mem:grailsDB"
+		username = "sa"
+		password = ""
+		settings = [mynew:"setting"]
+	 }
+	 sessionFactory(SessionFactory) {
+	 	dataSource = dataSource
+	 }
+	 myService(MyService) {
+		nestedBean = { AnotherBean bean ->
+		dataSource = dataSource
+	 }
+ }
+}
+```
+
+它同样支持导入bean配置，通过"importBeans"
+
+#### Using the container
+
+使用`T getBean(String name, Class<T> requiredType)`方法可以遍历容器中的bean实例。
+
+`ApplicationContext`允许你如下读取Bean定义和访问它们：
+
+```java
+// create and configure beans
+ApplicationContext context = new ClassPathXmlApplicationContext("services.xml", "daos.xml");
+// retrieve configured instance
+PetStoreService service = context.getBean("petStore", PetStoreService.class);
+// use configured instance
+List<String> userList = service.getUsernameList();
+```
+
+使用Groovy文件定义的，只需要换一个上下文实现类：
+
+```java
+ApplicationContext context = new GenericGroovyApplicationContext("services.groovy", "daos.groovy");
+```
+
+最灵活的变种是结合读取代理的`GenericApplicationContext`，对于xml配置文件：
+
+```java
+GenericApplicationContext context = new GenericApplicationContext();
+new XmlBeanDefinitionReader(ctx).loadBeanDefinitions("services.xml", "daos.xml");
+context.refresh();
+```
+
+对于groovy文件：
+
+```java
+GenericApplicationContext context = new GenericApplicationContext();
+new GroovyBeanDefinitionReader(ctx).loadBeanDefinitions("services.groovy", "daos.groovy");
+context.refresh();
+```
+
+### Bean overview
