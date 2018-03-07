@@ -154,3 +154,50 @@ log4j.appender.stdout.layout.ConversionPattern=%d{ABSOLUTE} %5p %t %c{2}:%L - %m
 
 log4j.category.org.springframework.bean.factory=DEBUG
 ```
+
+Log4j 2与JCL一同使用，需要讲Log4j添加到classpath上，并添加配置文件（log4j2.xml，log4j2.properties或其他[支持的格式](http://logging.apache.org/log4j/2.x/manual/configuration.html)）。
+对于Maven的使用者，最少依赖如下：
+```xml
+<dependencies>
+ <dependency>
+ <groupId>org.apache.logging.log4j</groupId>
+ <artifactId>log4j-core</artifactId>
+ <version>2.7</version>
+ </dependency>
+ <dependency>
+ <groupId>org.apache.logging.log4j</groupId>
+ <artifactId>log4j-jcl</artifactId>
+ <version>2.7</version>
+ </dependency>
+</dependencies>
+```
+如果你还想使用SLF4J，那么下面的依赖也需要：
+```xml
+<dependencies>
+ <dependency>
+ <groupId>org.apache.logging.log4j</groupId>
+ <artifactId>log4j-slf4j-impl</artifactId>
+ <version>2.7</version>
+ </dependency>
+</dependencies>
+```
+如下是一个示例log4j2.xml，日志打到控制台上：
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+ <Appenders>
+ <Console name="Console" target="SYSTEM_OUT">
+ <PatternLayout pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+ </Console>
+ </Appenders>
+ <Loggers>
+ <Logger name="org.springframework.beans.factory" level="DEBUG"/>
+ <Root level="error">
+ <AppenderRef ref="Console"/>
+ </Root>
+ </Loggers>
+</Configuration>
+```
+
+##### Runtime Containers with Native JCL
+
