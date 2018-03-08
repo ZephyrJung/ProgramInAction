@@ -203,6 +203,67 @@ bean定义本质上是创建一个或多个对象的配方。当需要的时候�
 
 xml配置中，class属性在如下两种方法之一中使用：
 
-- 
+- 容器自己直接通过反射的调用构造函数创建指定类的bean。有些类似于Java代码使用new操作符
+- 包含静态工厂方法的类将被调用以创建对象。容器调用一个类的静态工厂方法创建bean的情况不太常见。通过静态工厂方法返回的对象类型可能是同一个类，也可能完全是另一个类。
 
+内部类的类名应当类似于`com.example.Foo$Bar`，Bar是Foo的静态内部类。
 
+##### Instantiation with a constructor
+
+通过构造器方式创建bean，任何普通的类都能与Spring适用。即类无需实现特定接口或以某种特别的方式编码。仅仅指定bean类就足够。
+根据所使用的IoC类型，可能需要一个默认（空）构造函数。
+
+bean定义如下：
+
+```xml
+<bean id="exampleBean" class="examples.ExampleBean"/>
+<bean name="anotherExample" class="examples.ExampleBeanTwo"/>
+```
+##### Instantiation with a static factory method
+
+class属性指定包含静态工厂方法的类，factory-method属性指定工厂方法本身。
+这个定义没有指定返回对象的类型，而是包含工厂方法的类。在下面这个例子中，createInstance()方法必须是静态方法：
+
+```xml
+<bean id="clientService" class="examples.ClientService" factory-method="createInstance"/>
+```
+
+```java
+public class ClientService {
+    private static ClientService clientService = new ClientService();
+    private ClientService() {}
+    public static ClientService createInstance() {
+        return clientService;
+    }
+}
+```
+
+##### Instantiation using an instance factory method
+
+类似于静态工厂方法，实例工厂方法调用已存在的bean的非静态方法来创建bean。一个工厂类可以包含多个工厂方法。
+
+```xml
+<bean id="serviceLocator" class="examples.DefaultServiceLocator">
+ <!-- inject any dependencies required by this locator bean -->
+</bean>
+<bean id="clientService"
+ factory-bean="serviceLocator"
+ factory-method="createClientServiceInstance"/>
+<bean id="accountService"
+ factory-bean="serviceLocator"
+ factory-method="createAccountServiceInstance"/>
+```
+
+```java
+public class DefaultServiceLocator {
+    private static ClientService clientService = new ClientServiceImpl();
+    private static AccountService accountService = new AccountServiceImpl();
+    private DefaultServiceLocator() {}
+    public ClientService createClientServiceInstance() {
+        return clientService;
+    }
+    public AccountService createAccountServiceInstance() {
+        return accountService;
+    }
+}
+```
