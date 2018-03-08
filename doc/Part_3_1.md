@@ -169,3 +169,40 @@ context.refresh();
 ```
 
 ### Bean overview
+
+在容器内部，bean以`BeanDefinition`对象的形式存在。它包含如下信息：
+
+- bean所定义的实现类的完整名
+- bean行为配置元素，bean在容器中表现的状态（范围，生命周期，回调等）
+- bean完成工作所需要的其他bean的引用
+- 新创建对象的其他配置设置
+
+作为补充，ApplicationContext实现也允许在容器外所创建的已存在的对象的注册。
+这通过ApplicationContext的`getBeanFactory()`得到的BeanFactory实现`DFefaultListableBeanFactory`完成。
+`DefaultListableBeanFactory`通过`registerSingleton(..)`和`registerBeanDefinition(..)`来支持这种注册。
+然而，一般应用仅通过bean定义元信息来工作。
+
+#### Naming Beans
+
+每个bean有一个或多个标识，这些标志在容器中必须唯一。一个bean通常只有一个标识，如果有多个，一般被认为是别名。
+标识可以在xml中的id或name属性定义，id是唯一的，name可以指定多个别名，通过逗号`,`，分号`;`，空格` `来分隔。
+如果不提供name或id，容器会为bean生成一个唯一名称。如果想要通过name来引用bean，用ref元素或Service Locator风格查找，则必须提供name。
+
+##### Aliasing a bean outside the bean definition
+
+不同的组件可以对相同的依赖指定自己的别名。在xml配置中，可以使用如下标签：
+```xml
+<alias name="fromName" alias="toName"/>
+```
+
+如果使用Java配置，@Bean注解可以用来提供别名。
+
+#### Instantiating beans
+
+bean定义本质上是创建一个或多个对象的配方。当需要的时候，容器按图索骥，使用bean定义封装好的配置元信息来创建或获取实际的对象。
+
+xml配置中，class属性在如下两种方法之一中使用：
+
+- 
+
+
