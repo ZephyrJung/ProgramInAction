@@ -399,3 +399,42 @@ setter注入应当主要引用于有合理默认值的可选依赖，否则使�
 ##### Dependency resolution process
 
 81
+
+##### Examples of dependency injection
+
+#### Dependencies and configuration in detail
+
+##### Straight values (primitives, Strings, and so on)
+
+##### References to other beans (collaborators)
+
+##### inner beans
+
+##### Collections
+
+##### Null and empty string values
+
+##### XML shortcut with the p-namespace
+
+##### XML shortcut with the c-namespace
+
+##### Compound property names
+
+#### Using depends-on
+
+#### Lazy-initialized beans
+
+#### Autowiring collaborators
+
+##### Limitations and disadvantages of autowiring
+
+##### Excluding a bean from autowiring
+
+#### Method injection
+
+##### Lookup method injection
+
+##### Arbitary method replacement
+
+### Bean scopes
+
