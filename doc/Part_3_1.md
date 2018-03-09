@@ -267,3 +267,135 @@ public class DefaultServiceLocator {
     }
 }
 ```
+
+### Dependencies
+
+#### Dependency Injection
+
+依赖注入存在两种主要的变体， 构造器注入和Setter注入
+
+##### Constructor-based dependency injection
+
+```java
+public class SimpleMovieLister {
+    // the SimpleMovieLister has a dependency on a MovieFinder
+    private MovieFinder movieFinder;
+    // a constructor so that the Spring container can inject a MovieFinder
+    public SimpleMovieLister(MovieFinder movieFinder) {
+    this.movieFinder = movieFinder;
+    }
+    // business logic that actually uses the injected MovieFinder is omitted...
+}
+```
+
+###### Constructor argument resolution
+
+构造函数参数通过参数类型进行解析，如果bean定义的构造器参数没有潜在的歧义，那么bean定义的构造器参数的顺序，就是bean实例化过程中参数提供的顺序。
+
+```java
+package x.y;
+public class Foo {
+    public Foo(Bar bar, Baz baz) {
+        // ...
+    }
+}
+```
+
+构造器参数类型没有歧义，下面的配置可以正常工作，无需明确的指定参数类型的顺序或类型
+
+```xml
+<beans>
+    <bean id="foo" class="x.y.Foo">
+        <constructor-arg ref="bar"/>
+        <constructor-arg ref="baz"/>
+    </bean>
+    <bean id="bar" class="x.y.Bar"/>
+    <bean id="baz" class="x.y.Baz"/>
+</beans>
+```
+
+而如下类：
+
+```java
+package examples;
+public class ExampleBean {
+    // Number of years to calculate the Ultimate Answer
+    private int years;
+    // The Answer to Life, the Universe, and Everything
+    private String ultimateAnswer;
+    public ExampleBean(int years, String ultimateAnswer) {
+        this.years = years;
+        this.ultimateAnswer = ultimateAnswer;
+    }
+}
+```
+
+Spring无法判断值的类型，需要明确指定：
+
+```xml
+<bean id="exampleBean" class="examples.ExampleBean">
+    <constructor-arg type="int" value="7500000"/>
+    <constructor-arg type="java.lang.String" value="42"/>
+</bean>
+```
+
+或者使用`index`属性：
+
+```xml
+<bean id="exampleBean" class="examples.ExampleBean">
+    <constructor-arg index="0" value="7500000"/>
+    <constructor-arg index="1" value="42"/>
+</bean>
+```
+
+通过index可以对相同类型进行指定。0是索引的开始。
+还可以通过指定名称来消除歧义：
+
+```xml
+<bean id="exampleBean" class="examples.ExampleBean">
+    <constructor-arg name="years" value="7500000"/>
+    <constructor-arg name="ultimateAnswer" value="42"/>
+</bean>
+```
+
+需要知道的是，编译需要开启debug，才能让Spring通过构造器查找参数名称。如果无法开启或者不想开启debug，
+则可以使用`@ConstructorProperties`JDK注解来显式指定，示例类可能会类似于下面这样：
+
+```java
+package examples;
+public class ExampleBean {
+    // Fields omitted
+    @ConstructorProperties({"years", "ultimateAnswer"})
+    public ExampleBean(int years, String ultimateAnswer) {
+        this.years = years;
+        this.ultimateAnswer = ultimateAnswer;
+    }
+}
+```
+
+###### Setter-based dependency injection
+
+Setter注入由容器在调用无参构造函数或无参静态工厂方法实例化bean后调用setter方法来完成
+
+```java
+public class SimpleMovieLister {
+    // the SimpleMovieLister has a dependency on the MovieFinder
+    private MovieFinder movieFinder;
+    // a setter method so that the Spring container can inject a MovieFinder
+    public void setMovieFinder(MovieFinder movieFinder) {
+        this.movieFinder = movieFinder;
+    }
+    // business logic that actually uses the injected MovieFinder is omitted...
+}
+```
+
+混用构造函数注入强制依赖和setter注入可选依赖，是一个很好的经验法则。
+setter方法上添加@Required注解，则也会成为强制依赖。
+构造器注入，能够使应用程序组件成为不可变对象，并确保依赖关系不是null。
+而且，构造器注入的组件总是返回客户端处于完全初始化状态的代码。另一方面，大量的构造器参数意味着不好的代码，这意味着这个类可能负载太多，应当重构进行分离。
+setter注入应当主要引用于有合理默认值的可选依赖，否则使用依赖的任何地方都应当进行非空检查。
+使用setter注入的一个好处是，类的对象能够在之后重配置或重注入。
+
+###### Dependency resolution process
+
+81
