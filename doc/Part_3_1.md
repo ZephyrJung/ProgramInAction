@@ -373,7 +373,7 @@ public class ExampleBean {
 }
 ```
 
-###### Setter-based dependency injection
+##### Setter-based dependency injection
 
 Setter注入由容器在调用无参构造函数或无参静态工厂方法实例化bean后调用setter方法来完成
 
@@ -396,6 +396,6 @@ setter方法上添加@Required注解，则也会成为强制依赖。
 setter注入应当主要引用于有合理默认值的可选依赖，否则使用依赖的任何地方都应当进行非空检查。
 使用setter注入的一个好处是，类的对象能够在之后重配置或重注入。
 
-###### Dependency resolution process
+##### Dependency resolution process
 
 81
