@@ -398,9 +398,123 @@ setter注入应当主要引用于有合理默认值的可选依赖，否则使�
 
 ##### Dependency resolution process
 
-81
+容器执行bean依赖的解析过程如下：
+
+- ApplicationContext通过描述了所有bean的配置元信息创建并初始化。
+- 对于每个bean，它的依赖通过属性，参数（构造器参数，静态工厂方法参数）表现出来。这些依赖在bean真正创建后提供给bean
+- 每个属性或构造器参数应当是值的真正定义，或容器中另一个bean的引用。
+- 每个属性或构造器参数的值将从其特定格式转换为实际类型。默认情况下，Spring能够将值从string类型转换为任意内置类型，如int,long,String,boolean等。
+
+Spring容器在容器创建时便校验每个bean的配置。bean属性本身只有在bean真正创建的时候才会赋值。
+被设置为预先实例化的单例模式的bean在容器创建时就会创建。否则bean只有在被请求时才会创建。
+一个bean的创建可能引起一个bean图的创建，因为这些bean的依赖，和依赖的依赖都会创建并分配。
+
+> Circular dependencies
+> 如果主要使用构造器注入，则可能创建一个无法解析的循环依赖场景
+> 如A类依赖B类作为构造器参数，B依赖A作为构造器参数，此时就会引起BeanCurrentlyInCreationException
+> 一种解决办法是通过setter注入，但并不建议如此。
+
+Spring在创建Bean是尽可能迟的处理依赖关系。这意味着Spring容器可能正确的加载了，但在之后请求对象时，如果依赖有缺失或错误的参数仍然会产生异常。
+这种延迟某些配置问题可见性的可能，正是ApplicationContext实现使单例bean默认预先实例化的原因。
+你仍然可以用懒加载（lazy-initialize）覆盖这个默认预加载行为。
+
+如果没有循环依赖，则当一个或多个协作bean在注入到依赖的bean之前，每个协作bean已经完全配置好了。
 
 ##### Examples of dependency injection
+
+下面是基于xml配置的setter注入
+
+```xml
+<bean id="exampleBean" class="examples.ExampleBean">
+    <!-- setter injection using the nested ref element -->
+    <property name="beanOne">
+    <ref bean="anotherExampleBean"/>
+    </property>
+    <!-- setter injection using the neater ref attribute -->
+    <property name="beanTwo" ref="yetAnotherBean"/>
+    <property name="integerProperty" value="1"/>
+</bean>
+<bean id="anotherExampleBean" class="examples.AnotherBean"/>
+<bean id="yetAnotherBean" class="examples.YetAnotherBean"/>
+```
+
+```java
+public class ExampleBean {
+    private AnotherBean beanOne;
+    private YetAnotherBean beanTwo;
+    private int i;
+    public void setBeanOne(AnotherBean beanOne) {
+        this.beanOne = beanOne;
+    }
+    public void setBeanTwo(YetAnotherBean beanTwo) {
+        this.beanTwo = beanTwo;
+    }
+    public void setIntegerProperty(int i) {
+        this.i = i;
+    }
+}
+```
+
+下面是使用构造器注入
+
+```xml
+<bean id="exampleBean" class="examples.ExampleBean">
+    <!-- constructor injection using the nested ref element -->
+    <constructor-arg>
+    <ref bean="anotherExampleBean"/>
+    </constructor-arg>
+    <!-- constructor injection using the neater ref attribute -->
+    <constructor-arg ref="yetAnotherBean"/>
+    <constructor-arg type="int" value="1"/>
+</bean>
+<bean id="anotherExampleBean" class="examples.AnotherBean"/>
+<bean id="yetAnotherBean" class="examples.YetAnotherBean"/>
+```
+
+```java
+public class ExampleBean {
+    private AnotherBean beanOne;
+    private YetAnotherBean beanTwo;
+    private int i;
+    public ExampleBean(
+    AnotherBean anotherBean, YetAnotherBean yetAnotherBean, int i) {
+    this.beanOne = anotherBean;
+    this.beanTwo = yetAnotherBean;
+    this.i = i;
+    }
+}
+```
+
+下面是通过静态工厂方法返回对象的实例
+
+```xml
+<bean id="exampleBean" class="examples.ExampleBean" factory-method="createInstance">
+    <constructor-arg ref="anotherExampleBean"/>
+    <constructor-arg ref="yetAnotherBean"/>
+    <constructor-arg value="1"/>
+</bean>
+<bean id="anotherExampleBean" class="examples.AnotherBean"/>
+<bean id="yetAnotherBean" class="examples.YetAnotherBean"/>
+```
+
+```java
+public class ExampleBean {
+    // a private constructor
+    private ExampleBean(...) {
+        ...
+    }
+    // a static factory method; the arguments to this method can be
+    // considered the dependencies of the bean that is returned,
+    // regardless of how those arguments are actually used.
+    public static ExampleBean createInstance (
+        AnotherBean anotherBean, YetAnotherBean yetAnotherBean, int i) {
+        ExampleBean eb = new ExampleBean (...);
+        // some other operations...
+        return eb;
+    }
+}
+```
+
 
 #### Dependencies and configuration in detail
 
