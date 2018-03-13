@@ -520,6 +520,77 @@ public class ExampleBean {
 
 ##### Straight values (primitives, Strings, and so on)
 
+Spring使用转换服务来把值从String转换为实际需要的类型
+
+```xml
+<bean id="myDataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close">
+    <!-- results in a setDriverClassName(String) call -->
+    <property name="driverClassName" value="com.mysql.jdbc.Driver"/>
+    <property name="url" value="jdbc:mysql://localhost:3306/mydb"/>
+    <property name="username" value="root"/>
+    <property name="password" value="masterkaoli"/>
+</bean>
+```
+
+使用p命名空间可以使XML配置更简洁：
+
+```xml
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="myDataSource" class="org.apache.commons.dbcp.BasicDataSource"
+    destroy-method="close"
+    p:driverClassName="com.mysql.jdbc.Driver"
+    p:url="jdbc:mysql://localhost:3306/mydb"
+    p:username="root"
+    p:password="masterkaoli"/>
+</beans>
+```
+
+还可以如下配置一个java.util.Properties实例：
+
+```xml
+<bean id="mappings"
+    class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <!-- typed as a java.util.Properties -->
+    <property name="properties">
+    <value>
+    jdbc.driver.className=com.mysql.jdbc.Driver
+    jdbc.url=jdbc:mysql://localhost:3306/mydb
+    </value>
+    </property>
+</bean>
+```
+
+Spring容器通过JavaBeans的`PropertyEditor`机制转换<value/>标签内的文本为java.util.Properties实例。
+
+###### The idref element
+
+```xml
+<bean id="theTargetBean" class="..."/>
+<bean id="theClientBean" class="...">
+    <property name="targetName">
+        <idref bean="theTargetBean" />
+    </property>
+</bean>
+```
+
+上面的定义和下面在运行时是相同的：
+
+```xml
+<bean id="theTargetBean" class="..." />
+<bean id="client" class="...">
+    <property name="targetName" value="theTargetBean" />
+</bean>
+```
+
+第一种形式比第二种形式要好，因为使用idref标签允许容器在部署时验证引用的命名bean实际存在。 
+在第二种变体中，不会对传递给客户机bean的targetName属性的值执行验证。 
+当客户端bean实际实例化时，才会发现错别字（最致命的可能结果）。 
+如果客户端bean是原型bean，则只能在部署容器后很长时间才能发现该错字和产生的异常。
+
 ##### References to other beans (collaborators)
 
 ##### inner beans
