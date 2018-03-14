@@ -593,9 +593,101 @@ Spring容器通过JavaBeans的`PropertyEditor`机制转换<value/>标签内的�
 
 ##### References to other beans (collaborators)
 
+ref标签指定属性的值设置为容器管理的另一个bean的引用。
+引用的范围和验证取决于通过bean，local或parent属性指定
+属性的值可以与目标bean的id属性相同，或者是name属性中的一个值。
+
+通过`<ref/>`标签的bean属性指定目标bean是最常见的形式，允许创建对同一容器或父容器中的任何bean的引用，不论是否在同一xml中。
+
+```xml
+<ref bean = "someBean"/>
+```
+
+通过parent属性指定的目标bean必须位于当前bean的父容器中。主要在具有层次结构的容器中使用，以包装父容器bean中存在的bean作为代理。
+
+```xml
+<!-- in the parent context -->
+<bean id="accountService" class="com.foo.SimpleAccountService">
+    <!-- insert dependencies as required as here -->
+</bean>
+```
+
+```xml
+<!-- in the child (descendant) context -->
+<!-- bean name is the same as the parent bean -->
+<bean id="accountService" 
+    class="org.springframework.aop.framework.ProxyFactoryBean">
+    <property name="target">
+        <ref parent="accountService"/> <!-- notice how we refer to the parent bean -->
+    </property>
+    <!-- insert other configuration and dependencies as required here -->
+</bean>
+```
+
+local属性在4.0规范中不在支持，替换为bean即可。
+
 ##### inner beans
 
+在`<property/>`或`<constructor-arg/>`中定义的`<bean/>`就是所谓的内部bean
+
+```xml
+<bean id="outer" class="...">
+    <!-- instead of using a reference to a target bean, simply define the target bean inline -->
+    <property name="target">
+        <bean class="com.example.Person"> <!-- this is the inner bean -->
+            <property name="name" value="Fiona Apple"/>
+            <property name="age" value="25"/>
+        </bean>
+    </property>
+</bean>
+```
+
+内部bean的定义不需要标识，始终匿名，始终由使用的外部bean创建，不可能将内部bean注入到其他bean，也不能独立访问。
+
 ##### Collections
+
+在`<list/>`，`<set/>`，`<map/>`和`<props/>`标签内，可以相应的设置Java集合类型List，Set，Map和Properties。
+
+```xml
+<bean id="moreComplexObject" class="example.ComplexObject">
+    <!-- results in a setAdminEmails(java.util.Properties) call -->
+    <property name="adminEmails">
+        <props>
+            <prop key="administrator">administrator@example.org</prop>
+            <prop key="support">support@example.org</prop>
+            <prop key="development">development@example.org</prop>
+        </props>
+    </property>
+    <!-- results in a setSomeList(java.util.List) call -->
+    <property name="someList">
+        <list>
+            <value>a list element followed by a reference</value>
+            <ref bean="myDataSource" />
+        </list>
+    </property>
+    <!-- results in a setSomeMap(java.util.Map) call -->
+    <property name="someMap">
+        <map>
+            <entry key="an entry" value="just some string"/>
+            <entry key ="a ref" value-ref="myDataSource"/>
+        </map>
+    </property>
+    <!-- results in a setSomeSet(java.util.Set) call -->
+    <property name="someSet">
+        <set>
+            <value>just some string</value>
+            <ref bean="myDataSource" />
+        </set>
+    </property>
+</bean>
+```
+
+对于map键或值，或set的值，也可以同样是如下元素：
+
+`bean | ref | idref | list | set | map | props | value | null`
+
+###### Collection merging
+
 
 ##### Null and empty string values
 
