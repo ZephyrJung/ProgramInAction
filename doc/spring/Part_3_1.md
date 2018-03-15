@@ -825,9 +825,39 @@ foo有个fred属性，fred有个bob属性，bob有个sammy属性，只要fred，
 
 #### Using depends-on
 
+使用depends-on属性可以严格强制一个或多个bean在使用的bean之前初始化。
+
+```xml
+<bean id="beanOne" class="ExampleBean" depends-on="manager"/>
+<bean id="manager" class="ManagerBean" />
+```
+
 #### Lazy-initialized beans
 
+延迟加载：
+
+```xml
+<bean id="lazy" class="com.foo.ExpensiveToCreateBean" lazy-init="true"/>
+<bean name="not.lazy" class="com.foo.AnotherBean"/>
+```
+
+如果设置延迟加载的bean是另一个非延迟加载bean的依赖，则仍然会在容器初始化时实例化。
+可以设置默认值为延迟加载：
+
+```xml
+<beans default-lazy-init="true">
+    <!-- no beans will be pre-instantiated... -->
+</beans>
+```
+
 #### Autowiring collaborators
+
+bean标签上设置autowire属性，有4种模式：
+
+- no：默认值，无自动装配。Bean引用必须通过ref元素。对于较大的部署，建议不要开启自动，明确的配置易于控制，在一定程度上反映了系统结构。
+- byName：通过属性名进行装配。
+- byType：通过属性类型进行装配。如果有多个相同类型的bean，会抛出异常。如果没有，则无注入。
+- constructor：类似于byType，但用于构造器参数。
 
 ##### Limitations and disadvantages of autowiring
 
