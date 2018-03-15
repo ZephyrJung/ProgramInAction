@@ -813,6 +813,16 @@ c命名空间标签主要用于简化构造器参数的配置
 
 ##### Compound property names
 
+如果对象调用路径上的对象均不为null，则可以使用复合名称：
+
+```xml
+<bean id="foo" class="foo.Bar">
+    <property name="fred.bob.sammy" value="123" />
+</bean>
+```
+
+foo有个fred属性，fred有个bob属性，bob有个sammy属性，只要fred，bob不为空，就可以为sammy设置值123.
+
 #### Using depends-on
 
 #### Lazy-initialized beans
