@@ -688,12 +688,128 @@ local属性在4.0规范中不在支持，替换为bean即可。
 
 ###### Collection merging
 
+```xml
+<beans>
+    <bean id="parent" abstract="true" class="example.ComplexObject">
+        <property name="adminEmails">
+            <props>
+                <prop key="administrator">administrator@example.com</prop>
+                <prop key="support">support@example.com</prop>
+            </props>
+        </property>
+    </bean>
+    <bean id="child" parent="parent">
+        <property name="adminEmails">
+            <!-- the merge is specified on the child collection definition -->
+            <props merge="true">
+                <prop key="sales">sales@example.com</prop>
+                <prop key="support">support@example.co.uk</prop>
+            </props>
+        </property>
+    </bean>
+<beans>
+```
+
+子属性将集成父属性的所有值，并覆盖已有内容。
+合并的行为在list，map，set集合类型上表现相似。
+list集合的顺序在继承后，父项的值都会放到子项之前
+
+###### Limitations of collection merging
+
+无法合并不同类型的集合，否则将抛出异常。merge属性必须定义在继承的低级的子定义中。
+
+###### Strongly-typed collection
+
+如果集合有类型限定，Spring在注入时自动转换为相应的类型。
+
+```java
+public class Foo {
+    private Map<String, Float> accounts;
+        public void setAccounts(Map<String, Float> accounts) {
+        this.accounts = accounts;
+    }
+}
+```
+
+```xml
+<beans>
+    <bean id="foo" class="x.y.Foo">
+        <property name="accounts">
+            <map>
+                <entry key="one" value="9.99"/>
+                <entry key="two" value="2.75"/>
+                <entry key="six" value="3.99"/>
+            </map>
+        </property>
+    </bean>
+</beans>
+```
 
 ##### Null and empty string values
 
+Spring将空参数作为空字符串处理，使用`<null/>`标签来处理null值。
+
+```xml
+<bean class="ExampleBean">
+    <property name="email" value=""/>
+    <property name="phone">
+        <null/>
+    </property>
+</bean>
+```
+
 ##### XML shortcut with the p-namespace
 
+```xml
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:p="http://www.springframework.org/schema/p"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean name="john-classic" class="com.example.Person">
+        <property name="name" value="John Doe"/>
+        <property name="spouse" ref="jane"/>
+    </bean>
+    <bean name="john-modern" class="com.example.Person"
+        p:name="John Doe"
+        p:spouse-ref="jane"/>
+    <bean name="jane" class="com.example.Person">
+        <property name="name" value="Jane Doe"/>
+    </bean>
+</beans>
+```
+
+上面两个bean都定义了两个属性，其中一个是对另一个bean的引用。
+可以看到，p后面制定了name的值，对于引用属性，-前面是name值，ref表示引用。
+
 ##### XML shortcut with the c-namespace
+
+c命名空间标签主要用于简化构造器参数的配置
+
+```xml
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:c="http://www.springframework.org/schema/c"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean id="bar" class="x.y.Bar"/>
+    <bean id="baz" class="x.y.Baz"/>
+    <!-- traditional declaration -->
+    <bean id="foo" class="x.y.Foo">
+        <constructor-arg ref="bar"/>
+        <constructor-arg ref="baz"/>
+        <constructor-arg value="foo@bar.com"/>
+    </bean>
+    <!-- c-namespace declaration -->
+    <bean id="foo" class="x.y.Foo" c:bar-ref="bar" c:baz-ref="baz" c:email="foo@bar.com"/>
+</beans>
+```
+在少数情况下无法得到构造器名称，可以降级使用参数索引：
+
+```xml
+<!-- c-namespace index declaration -->
+<bean id="foo" class="x.y.Foo" c:_0-ref="bar" c:_1-ref="baz"/>
+```
 
 ##### Compound property names
 
