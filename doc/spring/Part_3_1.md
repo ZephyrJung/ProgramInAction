@@ -861,13 +861,114 @@ bean标签上设置autowire属性，有4种模式：
 
 ##### Limitations and disadvantages of autowiring
 
+- 显示的属性和构造器参数的依赖会覆盖自动装配。不能通过自动装配注入简单属性，如基本数据类型，String和Class（以及简单属性的数组）。这个设计之初的限制。
+- 自动装配不如直接指定明确。尽管Spring十分小心的避免可能导致无法预料结果的歧义，然而Spring管理的对象关系无法书面化的明显了。
+- 一些Spring容器的工具可能无法生成装配信息的文档了。
+- 对于只需要但一值的依赖，如果有多个bean通过自动装配匹配到，会抛出异常
+
+对于后面的场景，可以有如下选择：
+
+- 放弃自动装配，使用显式指定
+- 在bean定义上设置`autowire-candidate`属性值为false，避免自动装配
+- 指定bean为首要候选者，设置`primary`属性值为true
+- 通过基于注释的配置，实现更加精细的控制，见后面章节。
+
 ##### Excluding a bean from autowiring
+
+autowire-candidate = false
+
+可以在beans标签上设置`default-autowire-candidate`的值指定匹配的模式
+如将autowire候选者限制为名称以Repository结尾的bean，则指定值为`*Repository`
+多种模式用逗号分隔。
+这个优先级要低于bean的autowire-candidate属性
+
+这些属性使bean本身不能作为自动装配的bean，但不意味着bean本身不能通过自动装配注入依赖。
+
 
 #### Method injection
 
 ##### Lookup method injection
 
-##### Arbitary method replacement
+##### Arbitrary method replacement
 
 ### Bean scopes
 
+#### The singleton scope
+
+#### The prototype scope
+
+#### Singleton beans with prototype-bean dependencies
+
+#### Request, session, global session, application, and WebSocket scopes
+
+##### Initial Web configuration
+
+##### Request Scope
+
+##### Global session scope
+
+##### Application scope
+
+##### Scoped beans as dependencies
+
+#### Custom scopes
+
+##### Creating a custom scope
+
+##### Using a custom scope
+
+### Customizing the nature of a bean
+
+#### Lifecycle callbacks
+
+##### Initialization callbacks
+
+##### Destruction callbacks
+
+##### Default initialization and destroy methods
+
+##### Combining lifecycle mechanisms
+
+##### Startup and shutdown callbacks
+
+##### Shutting down the Spring IoC container gracefully in non-web applications
+
+#### ApplicationContextAware and BeanNameAware
+
+#### Other Aware interfaces
+
+### Bean definition inheritance
+
+### Container Extension Points
+
+#### Customizing beans using a BeanPostProcessor
+
+##### Example: Hello World, BeanPostProcessor-style
+
+##### Example: The RequiredAnnotationBeanPostProcessor
+
+#### Customizing configuration metadata with a BeanFactoryPostProcessor
+
+##### Example: the Class name substitution PropertyPlaceholderConfigurer
+
+##### Example: the PropertyOverrideConfigurer
+
+#### Customizing instantiation logic with a FactoryBean
+
+### Annotation-based container configuration
+
+### Classpath scanning and managed components
+
+### Using JSR 330 Standard Annotations
+
+### Java-based container configuration
+
+### Environment abstraction
+
+### Registering a LoadTimeWeaver
+
+### Additional Capabilities of the ApplicationContext
+
+### The BeanFactory
+
+## Resources
