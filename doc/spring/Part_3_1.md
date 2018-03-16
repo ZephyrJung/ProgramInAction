@@ -957,18 +957,186 @@ autowire-candidate = false
 
 ### Annotation-based container configuration
 
+#### @Required
+
+#### @Autowired
+
+#### Fine-tuning annotation-based autowiring with @Primary
+
+#### Fine-tuning annotation-based autowiring with qualifiers
+
+#### Using generics as autowiring qualifiers
+
+#### CustomAutowireConfigurer
+
+#### @Resource
+
+#### PostConstruct and @PreDestroy
+
 ### Classpath scanning and managed components
+
+#### @Component and further stereotype annotations
+
+#### Meta-annotations
+
+#### Automatically detecting classes and registering bean definitions
+
+#### Using filters to customize scanning
+
+#### Defining bean metadata within components
+
+#### Naming autodetected components
+
+#### Providing a scope for autodetected components
+
+#### Providing a qualifier metadata with annotations
 
 ### Using JSR 330 Standard Annotations
 
+#### Dependency Injection with @Inject and @Named
+
+#### @Named and @ManagedBean: standard equivalents to the @Component annotation
+
+#### Limitations of JSR-330 standard annotations
+
 ### Java-based container configuration
 
+#### Basic concepts: @Bean and @Configuration
+
+#### Instantiating the Spring container using AnnotationConfigApplicationContext Simple construction
+
+##### Simple construction
+
+##### Building the container programmatically using register(Class<?>...)
+
+##### Enabling component scanning with scan(String...)
+
+##### Support for web applications with AnnotationConfigWebApplicationContext
+
+#### Using the @Bean annotation
+
+##### Declaring a bean
+
+##### Bean dependencies
+
+##### Receiving lifecycle callbacks
+
+##### Specifying bean scope
+
+##### Customizing bean naming
+
+##### Bean aliasing
+
+##### Bean description
+
+#### Using the @Configuration annotation
+
+##### Injecting inter-bean dependencies
+
+##### Lookup method injection
+
+##### Further information about how Java-based configuration works internally
+
+#### Composing Java-based configurations
+
+##### Using the @Import annotation
+
+##### Conditionally include @Configuration classes or @Bean methods
+
+##### Combining Java and XML configuration
+
 ### Environment abstraction
+
+#### Bean definition profiles
+
+##### @Profile
+
+#### XML bean definition profiles
+
+##### Activating a profile
+
+##### Default profile
+
+#### PropertySource abstraction
+
+#### @PropertySource
+
+#### Placeholder resolution in statements
 
 ### Registering a LoadTimeWeaver
 
 ### Additional Capabilities of the ApplicationContext
 
+#### Internationalization using MessageSource
+
+#### Standard and Custom Events
+
+##### Annotation-based Event Listeners
+
+##### Asynchronous Listeners
+
+##### Ordering Listeners
+
+##### Generic Events
+
+#### Convenient access to low-level resources
+
+#### Convenient ApplicationContext instantiation for web applications
+
+#### Deploying a Spring ApplicationContext as a Java EE RAR file
+
 ### The BeanFactory
 
+#### BeanFactory or ApplicationContext
+
+#### Glue code and the evil singleton
+
 ## Resources
+
+### Introduction
+
+### The Resource interface
+
+### Built-in Resource implementations
+
+#### UrlResource
+
+#### ClassPathResource
+
+#### FileSystemResource
+
+#### ServletContextResource
+
+#### Input StreamResource
+
+#### ByteArrayResource
+
+### The ResourceLoader
+
+### The ResourceLoaderAware interface
+
+### Resources as dependencies
+
+### Application contexts and Resource paths
+
+#### Constructing application contexts
+
+##### Constructing ClassPathXmlApplicationContext instances - shortcuts
+
+#### Wildcards in application context constructor resource paths
+
+##### Ant-style Patterns
+
+##### The Classpath*: portability classpath*: prefix
+
+##### Other notes relating to wildcards
+
+#### FileSystemResource caveats
+
+## Validation, Data Binding, and Type Conversion
+
+## Spring Expression Language (SpEL)
+
+## Aspect Oriented Programming with Spring
+
+## Spring AOP APIs
