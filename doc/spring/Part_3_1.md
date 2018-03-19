@@ -887,7 +887,120 @@ autowire-candidate = false
 
 #### Method injection
 
+单例bean注入另一个单例bean，或者非单例bean注入另一个非单例bean，可以配置为一个依赖。
+然而当一个非单例bean注入到一个单例bean时，由于单例bean在容器创建时只有一次实例化的机会，容器不可能每次都能在单例bean需要的时候有对应的非单例bean
+
+一个解决办法是放弃一些控制反转。可以通过实现`ApplicationContextAware`接口来使得单例bean被容器所感知，并在需要的时候调用getBean方法获取需要的实例。
+下面是这个方式的一个例子：
+
+```java
+// a class that uses a stateful Command-style class to perform some processing
+package fiona.apple;
+// Spring-API imports
+import org.springframework.beans.BeansException;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.ApplicationContextAware;
+public class CommandManager implements ApplicationContextAware {
+    private ApplicationContext applicationContext;
+    public Object process(Map commandState) {
+        // grab a new instance of the appropriate Command
+        Command command = createCommand();
+        // set the state on the (hopefully brand new) Command instance
+        command.setState(commandState);
+        return command.execute();
+    }
+    protected Command createCommand() {
+        // notice the Spring API dependency!
+        return this.applicationContext.getBean("command", Command.class);
+    }
+    public void setApplicationContext(
+        ApplicationContext applicationContext) throws BeansException {
+        this.applicationContext = applicationContext;
+    }
+}
+```
+
+这样的代码不是很好，这使得业务代码耦合到了Spring框架中。
+
 ##### Lookup method injection
+
+查找方法注入是容器覆盖容器管理的bean上方法的能力，以返回容器中另一个命名bean的查找结果。 
+查找通常包含一个原型bean，如前一节所述。 
+Spring Framework通过使用CGLIB库中的字节码生成来动态生成覆盖该方法的子类，从而实现了此方法注入。
+
+- 为了使动态子类工作，Spring bean容器要子类化的类不能是final，要覆盖的方法也不能是final
+- 对具有抽象方法的类进行单元测试需要自己对该类子类化并提供抽象方法的基础实现
+- 组件扫描也需要具体的方法，这需要具体的类来实现。
+- 另一个关键的限制是查找方法不适用于工厂方法，特别是不用于配置类中的@Bean方法，因为在这种情况下容器不负责创建实例，因此不能在运行中创建运行时生成的子类。
+
+上面的`CommandManager`代码中，它将不会有Spring依赖，Spring容器将动态实现`createCommand()`方法：
+
+```java
+package fiona.apple;
+// no more Spring imports!
+public abstract class CommandManager {
+    public Object process(Object commandState) {
+        // grab a new instance of the appropriate Command interface
+        Command command = createCommand();
+        // set the state on the (hopefully brand new) Command instance
+        command.setState(commandState);
+        return command.execute();
+    }
+    // okay... but where is the implementation of this method?
+    protected abstract Command createCommand();
+}
+```
+
+要进行方法注入的方法应当有如下形式的签名：
+
+```java
+<public|protected> [abstract] <return-type> theMethodName(no-arguments);
+```
+
+如果方法是抽象方法，动态生成的子类将实现方法。否则，动态生成子类将覆盖原类中具体的方法，例如：
+
+```xml
+<!-- a stateful bean deployed as a prototype (non-singleton) -->
+<bean id="myCommand" class="fiona.apple.AsyncCommand" scope="prototype">
+    <!-- inject dependencies here as required -->
+</bean>
+<!-- commandProcessor uses statefulCommandHelper -->
+<bean id="commandManager" class="fiona.apple.CommandManager">
+    <lookup-method name="createCommand" bean="myCommand"/>
+</bean>
+```
+
+commandManager在需要myCommand的新实例时，调用起自己的方法createCommand。
+如果需要，必须小心的将myCommand设为prototype，如果是singleton，则每次返回的都是myCommand的相同实例。
+
+作为可选项，在基于注解的配置，可以通过@Lookup注解声明查找方法：
+
+```java
+public abstract class CommandManager {
+    public Object process(Object commandState) {
+        Command command = createCommand();
+        command.setState(commandState);
+        return command.execute();
+    }
+    @Lookup("myCommand")
+    protected abstract Command createCommand();
+}
+```
+
+或者，更习惯上，依赖目标bean针对查找方法声明返回类型进行解析：
+
+```java
+public abstract class CommandManager {
+    public Object process(Object commandState) {
+        MyCommand command = createCommand();
+        command.setState(commandState);
+        return command.execute();
+    }
+    @Lookup
+    protected abstract MyCommand createCommand();
+}
+```
+
 
 ##### Arbitrary method replacement
 
