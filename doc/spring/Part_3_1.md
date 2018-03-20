@@ -1006,9 +1006,31 @@ public abstract class CommandManager {
 
 ### Bean scopes
 
+- singleton：（默认）限定一个bean定义的范围是在一个Spring IoC容器中，只有一个对象实例。
+- prototype：限定一个bean定义的范围可以有任意数量的对象实例。
+- request：限定一个bean定义的范围在一个http请求的生命周期内；这意味着每个HTTP请求有其单独的实例。仅在web相关的Spring上下文生效
+- session：限定一个bean定义的范围在一个http会话的生命周期内；仅在web相关的Spring上下文生效
+- globalSession：在全局HTTP会话的生命周期范围内定义一个单一的bean定义。通常仅在Portlet上下文中使用时才有效。只有在Web感知的Spring ApplicationContext的上下文中才有效。
+- application：
+- websocket
+
 #### The singleton scope
 
+只管理单个bean的一个共享实例，并且具有与该bean定义匹配的id或id的bean的所有请求都会导致Spring容器返回一个特定的bean实例。
+Spring的单例bean与设计模式中的单例模式有所区别。设计模式通过编码保证在类加载器中只能有一个特定的类的实例。Spring则针对于每一个容器的每一个Bean
+singleton是默认scope
+
 #### The prototype scope
+
+作为规范，对所有有状态的bean使用prototype，对无状态的bean使用singleton。
+prototype的定义如下：
+```xml
+<bean id="accountService" class="com.foo.DefaultAccountService" scope="prototype"/>
+```
+与其他范围相比，Spring不管理prototype bean的完整生命周期：容器实例化，配置并以其他方式组装prototype对象，并将其交给客户端，而不再记录该prototype实例。 
+因此，尽管不论什么范围，所有对象上初始化生命周期的回调方法都会调用，但在prototype的情况下，不调用配置的销毁生命周期回调。 
+客户端代码必须清理prototype范围的对象并释放原型bean持有的昂贵资源。 
+为了让Spring容器释放prototype范围bean所拥有的资源，可以尝试使用一个自定义bean后处理器，该后处理器保存对需要清理的bean的引用。
 
 #### Singleton beans with prototype-bean dependencies
 
