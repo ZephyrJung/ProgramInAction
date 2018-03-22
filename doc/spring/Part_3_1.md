@@ -1004,6 +1004,8 @@ public abstract class CommandManager {
 
 ##### Arbitrary method replacement
 
+略
+
 ### Bean scopes
 
 - singleton：（默认）限定一个bean定义的范围是在一个Spring IoC容器中，只有一个对象实例。
@@ -1018,7 +1020,7 @@ public abstract class CommandManager {
 
 只管理单个bean的一个共享实例，并且具有与该bean定义匹配的id或id的bean的所有请求都会导致Spring容器返回一个特定的bean实例。
 Spring的单例bean与设计模式中的单例模式有所区别。设计模式通过编码保证在类加载器中只能有一个特定的类的实例。Spring则针对于每一个容器的每一个Bean
-singleton是默认scope
+singleton是默认作用域。
 
 #### The prototype scope
 
@@ -1034,13 +1036,103 @@ prototype的定义如下：
 
 #### Singleton beans with prototype-bean dependencies
 
+无法为单例bean注入prototype的bean依赖，因为单例bean只在容器初始化的时候解决并注入依赖一次。
+如果在运行时需要多次新的实例，参见“Method injection”
+
 #### Request, session, global session, application, and WebSocket scopes
+
+`request`，`session`，`globalSession`，`application`和`weboskcet`只有在有web能力的Spring上下文实现中有效
+如XmlWebApplicationContext，否则会抛出关于未知bean作用域的IllegalStateException异常。
 
 ##### Initial Web configuration
 
+在支持这些作用域之前需要一些小的配置（singleton和prototype则不需要）
+如何完成这些初始化取决于你所使用的Servlet环境。
+
+如果在Spring Web MVC下访问这些作用域的bean，在Spring的`DispatcherServlet`或`DispatcherPorlet`处理的请求中，不需要特殊的设置。
+他们已经暴露了所有相关的状态。
+
+如果使用了一个Servlet 2.5的web容器，在`DispatcherServlet`以外处理请求（如JSF或Struts），你需要注册`org.springframework.web.context.request.RequestContextListenerServletRequestListener`
+在Servlet 3.0+的容器中，可以通过`WebApplicationInitializer`接口编程实现。
+作为可选项，对于以前的容器，在web.xml文件中添加如下声明：
+
+```xml
+<web-app>
+    ...
+    <listener>
+        <listener-class>
+            org.springframework.web.context.request.RequestContextListener
+        </listener-class>
+    </listener>
+    ...
+</web-app>
+```
+
+如果监听器设置有问题，考虑使用Spring的`RequestContextFilter`。过滤器映射取决于所处的web应用配置，因此要做相应的修改。
+
+```xml
+<web-app>
+    ...
+    <filter>
+        <filter-name>requestContextFilter</filter-name>
+        <filter-class>org.springframework.web.filter.RequestContextFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>requestContextFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
+    ...
+</web-app>
+```
+
+DispatcherServlet, RequestContextListener和RequestContextFilter都做了相同的事情，
+即将HTTP请求对象绑定到服务这些请求的线程上。这使得request和session范围的bean能够在调用链上下沉。
+
 ##### Request Scope
 
+假设有下面这样的XML文件配置bean：
+
+```xml
+<bean id="loginAction" class="com.foo.LoginAction" scope="request"/>
+```
+
+对于每个HTTP请求，Spring容器都会创建一个LoginAction的新实例。你可以任意修改实例内部的状态而不用担心影响其他loginAction的实例。
+当请求完成时，作用在这个请求的bean将被丢弃。
+
+如果使用Java注解方式配置，`@RequestScope`注解可以用来指定一个component为`reqest`作用域
+
+```java
+@RequestScope
+@Component
+public class LoginAction {
+    //...
+}
+```
+
+##### Session scope
+
+```xml
+<bean id="userPreferences" class="com.foo.UserPreferences" scope="session"/>
+```
+
+```java
+@SessionScope
+@Component
+public class UserPreferences {
+    // ...
+}
+```
+
 ##### Global session scope
+
+```xml
+<bean id="userPreferences" class="com.foo.UserPreferences" scope="globalSession"/>
+```
+
+globalSession作用域类似于HTTP session作用域，只应用在基于portlet的web应用上下文中。
+Portlet规范定义了全局会话的概念：在构成单个Portlet Web应用程序的所有Portlet之间共享。
+
+如果你在标准Servlet容器中对一个或多个bean定义了globalSession作用域，标准HTTP会话作用域将被使用，不会引起错误。
 
 ##### Application scope
 
