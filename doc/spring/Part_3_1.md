@@ -1136,13 +1136,142 @@ Portlet规范定义了全局会话的概念：在构成单个Portlet Web应用�
 
 ##### Application scope
 
+```xml
+<bean id="appPreferences" class="com.foo.AppPreferences" scope="application"/>
+```
+
+在整个Web应用中，Spring容器通过appPreferences Bean定义创建一次AppPreferences的新实例。
+这意味着appPreferences是作用域在ServletContext级别的bean，存储为一个ServletContext属性。
+这与Spring的单例bean类似，但有两个重要的区别：
+
+- 它是在每个ServletContext下的单个bean而非Spring的ApplicationContext
+- 它实际上已经暴露出来，作为一个ServletContext的可见属性
+
+使用注解定义如下：
+
+```java
+@ApplicationScope
+@Component
+public class AppPreferences {
+    // ...
+}
+```
+
 ##### Scoped beans as dependencies
+
+如果想要注入如一个HTTP请求作用域的bean到一个作用于更长的bean中，你可以选择注入一个AOP代理作为替代。
+这意味着，你需要注入一个代理对象来暴露那个作用域相同的公共接口，但也可以从相关作用域（如HTTP请求）中检索实际目标对象，并将方法调用委托给实际对象。
+
+您也可以在作用域为singleton的bean之间使用`<aop：scoped-proxy />`，然后引用通过一个可序列化的中间代理，因此可以在反序列化中重新获得目标单例bean。
+当针对范围原型的bean声明`<aop：scoped-proxy/>`时，共享代理上的每个方法调用都将导致创建一个新的目标实例，然后将该调用转发给该实例。
+
+此外，作用域化代理不是以生命周期安全的方式从较短范围访问Bean的唯一方式。 
+您也可以简单地将注入点（即构造函数/setter参数或自动注入字段）声明为`ObjectFactory<MyTargetBean>`，
+从而允许getObject()调用在每次需要时按需检索当前实例 - 而不必保留实例或单独存储它。
+
+JSR-330变体称为Provider，与`Provider<MyTargetBean>`一起使用声明和每个检索尝试的相应get()调用。
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:aop="http://www.springframework.org/schema/aop"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans.xsd
+ http://www.springframework.org/schema/aop
+ http://www.springframework.org/schema/aop/spring-aop.xsd">
+ <!-- an HTTP Session-scoped bean exposed as a proxy -->
+    <bean id="userPreferences" class="com.foo.UserPreferences" scope="session">
+        <!-- instructs the container to proxy the surrounding bean -->
+        <aop:scoped-proxy/>
+    </bean>
+    <!-- a singleton-scoped bean injected with a proxy to the above bean -->
+    <bean id="userService" class="com.foo.SimpleUserService">
+        <!-- a reference to the proxied userPreferences bean -->
+        <property name="userPreferences" ref="userPreferences"/>
+    </bean>
+</beans>
+```
+
+###### Choosing the type of proxy to create
+
+默认情况下，使用`<aop:scoped-proxy/>`元素创建bean代理时，一个基于CGLIB的类代理被创建。
+CGLIB代理仅拦截公共方法调用，非公共方法不会被代理到实际作用域的目标对象
+
+作为可选，也可以配置容器创建一个标准的JDK接口代理，只要设置`proxy-target-class`属性为false。
+这同时也意味着作用域bean至少有一个接口实现，更多细节见后。
+
+```xml
+<!-- DefaultUserPreferences implements the UserPreferences interface -->
+<bean id="userPreferences" class="com.foo.DefaultUserPreferences" scope="session">
+    <aop:scoped-proxy proxy-target-class="false"/>
+</bean>
+<bean id="userManager" class="com.foo.UserManager">
+    <property name="userPreferences" ref="userPreferences"/>
+</bean>
+```
 
 #### Custom scopes
 
+bean的作用域机制是可扩展的。可以定义自己的作用域，甚至覆盖已有的作用域，尽管这样是不好的实践。无法覆盖内置的singleton和prototype作用域。
+
 ##### Creating a custom scope
 
+要集成自定义作用域到Spring容器中，需要实现接口`org.springframework.beans.factory.config.Scope`。
+
+- Object get(String name, ObjectFactory objectFactory) 返回相应作用域的bean
+- Object remove(String name) 从作用域中移除对象
+- void registerDestructionCallback(String name,Runnable destructionCallback) 注册作用域销毁或作用域内的对象销毁时应当执行的回调
+- String getConversationId() 返回作用域的对话标识符
+
 ##### Using a custom scope
+
+- void registerScope(String scopeName,Scope scope) 在Spring容器中注册自定义作用域
+
+这个方法在ConfigurableBeanFactory接口中声明，大部分ApplicationContext实现都存在。
+
+下面以`SimpleThreadScope`为例，它包含在Spring中，但默认没有注册。
+
+```java
+Scope threadScope = new SimpleThreadScope();
+beanFactory.registerScope("thread", threadScope);
+```
+
+然后即可使用这个作用域：
+
+```xml
+<bean id="..." class="..." scope="thread">
+```
+
+可以不通过代码来注册：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:aop="http://www.springframework.org/schema/aop"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans.xsd
+ http://www.springframework.org/schema/aop
+ http://www.springframework.org/schema/aop/spring-aop.xsd">
+    <bean class="org.springframework.beans.factory.config.CustomScopeConfigurer">
+        <property name="scopes">
+            <map>
+                <entry key="thread">
+                    <bean class="org.springframework.context.support.SimpleThreadScope"/>
+                </entry>
+            </map>
+        </property>
+    </bean>
+    <bean id="bar" class="x.y.Bar" scope="thread">
+        <property name="name" value="Rick"/>
+        <aop:scoped-proxy/>
+    </bean>
+    <bean id="foo" class="x.y.Foo">
+        <property name="bar" ref="bar"/>
+    </bean>
+</beans>
+```
 
 ### Customizing the nature of a bean
 
