@@ -1277,6 +1277,14 @@ beanFactory.registerScope("thread", threadScope);
 
 #### Lifecycle callbacks
 
+要与bean生命周期的容器管理进行交互，可以实现Spring InitializingBean和DisposableBean接口。 
+容器调用前者的afterPropertiesSet()，后者的destroy()以允许bean在初始化和销毁bean时执行某些操作。
+
+使用JSR-250标准的@PostConstruct和@PreDestroy注解通常被认为是Spring应用处理生命周期回调的最佳实践。
+使用这些注解意味着bean没有耦合到Spring的特定接口中。如果不想使用注解解耦，考虑init-method和destroy-method对象定义元信息
+
+除了初始化和销毁回调，Spring管理的对象还可以实现Lifecycle接口，以便这些对象可以参与由容器自身生命周期的启动和关闭过程。
+
 ##### Initialization callbacks
 
 ##### Destruction callbacks
