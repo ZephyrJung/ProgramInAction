@@ -1287,13 +1287,163 @@ beanFactory.registerScope("thread", threadScope);
 
 ##### Initialization callbacks
 
+使用init-method：
+
+```xml
+<bean id="exampleInitBean" class="examples.ExampleBean" init-method="init"/>
+```
+
+```java
+public class ExampleBean {
+    public void init() {
+        // do some initialization work
+    }
+}
+```
+
+与如下方式效果是一样的，只不过不会将代码耦合到Spring中：
+
+```xml
+<bean id="exampleInitBean" class="examples.AnotherExampleBean"/>
+```
+```java
+public class AnotherExampleBean implements InitializingBean {
+    public void afterPropertiesSet() {
+        // do some initialization work
+    }
+}
+```
+
+也可以使用@PostConstruct注解，或者@Bean注解的initMethod属性
+
 ##### Destruction callbacks
+
+同上有如下方式：
+
+```xml
+<bean id="exampleInitBean" class="examples.ExampleBean" destroy-method="cleanup"/>
+```
+
+```java
+public class ExampleBean {
+    public void cleanup() {
+        // do some destruction work (like releasing pooled connections)
+    }
+}
+```
+
+等同于：
+
+```xml
+<bean id="exampleInitBean" class="examples.AnotherExampleBean"/
+```
+
+```java
+public class AnotherExampleBean implements DisposableBean {
+    public void destroy() {
+        // do some destruction work (like releasing pooled connections)
+    }
+}
+```
+
+或@PreDestroy注解，或@Bean注解的destroyMethod属性
 
 ##### Default initialization and destroy methods
 
+初始化或销毁的方法名称在项目中一般是有定义标准的，可以为每个bean共同定义一个初始化：
+
+```xml
+<beans default-init-method="init">
+    <bean id="blogService" class="com.foo.DefaultBlogService">
+        <property name="blogDao" ref="blogDao" />
+    </bean>
+</beans>
+```
+
+销毁方法类似，定义`default-destroy-method`
+
+对于已有的配置，可以在bean标签上设置init-method或destroy-method覆盖
+
 ##### Combining lifecycle mechanisms
 
+使用多种方式来配置生命周期方法，如果方法名不同，则每个配置的方法将在下面所说的顺序执行一次。如果名称相同，则只执行一次。
+
+不同的初始化方法，将以下面顺序开始调用：
+
+1. @PostConstruct注解的方法
+2. InitializingBean接口的afterPropertiesSet()回调方法
+3. 自定义的init()方法
+
+销毁方法顺序同样：
+
+1. @PreDestory
+2. DisposableBean.destory()
+3. 自定义destroy
+
 ##### Startup and shutdown callbacks
+
+Lifecycle接口定义了拥有自己的生命周期的对象的必要方法：
+
+```java
+public interface Lifecycle {
+    void start();
+    void stop();
+    boolean isRunning();
+}
+```
+
+任何Spring管理的对象都可以实现这个接口。当ApplicationContext自身接收到启动或停止的信号时，如运行时的停止/重启场景，
+它将级联的调用那些上下文中定义的Lifecycle实现。这个工作委托给了LifecycleProcessor:
+
+```java
+public interface LifecycleProcessor extends Lifecycle {
+    void onRefresh();
+    void onClose();
+}
+```
+
+LifecycleProcessor本身是Lifecycle接口的一个扩展，它还添加了额外的两个方法来响应上下文的刷新和关闭。
+
+请注意，常规的org.springframework.context.Lifecycle接口只是显式启动/停止通知的普通协定，并不意味着在上下文刷新时自动启动。 
+考虑实现org.springframework.context.SmartLifecycle来代替对特定bean的自动启动（也包括启动协商）的细粒度控制。 
+此外，请注意，停止通知不保证在销毁之前发生：在正常关闭时，所有生命周期bean将在传播销毁回调之前首先收到停止通知; 
+但是，在上下文生命周期内的热刷新或中止刷新尝试时，只会调用销毁方法。
+
+SmartLifecycle定义了另一个选项，名为getPhase()的方法，定义在Phased接口中：
+
+```java
+public interface Phased{
+    int getPhase();
+}
+```
+
+```java
+public interface SmartLifecycle extends Lifecycle, Phased {
+    boolean isAutoStartup();
+    void stop(Runnable callback);
+}
+```
+
+启动时，phase最低的首先启动，停止时跟随相反的顺序。
+任何负phase值都表示对象应该在标准组件之前启动（在他们之后停止）。
+
+正如您所看到的，SmartLifecycle定义的stop方法接受回调。 任何实现必须在该实现的关闭过程完成后调用该回调的run（）方法。 
+这可以在需要时进行异步关闭，因为LifecycleProcessor接口的默认实现DefaultLifecycleProcessor将等待每个阶段中的对象组的超时值以调用该回调。 
+每个阶段的默认超时时间是30秒。 您可以通过在上下文中定义一个名为“lifecycleProcessor”的bean来覆盖默认的生命周期处理器实例。 
+如果您只想修改超时值，那么定义以下就足够了：
+
+```xml
+<bean id="lifecycleProcessor" class="org.springframework.context.support.DefaultLifecycleProcessor">
+    <!-- timeout value in milliseconds -->
+    <property name="timeoutPerShutdownPhase" value="10000"/>
+</bean>
+```
+
+如前所述，LifecycleProcessor接口还定义了用于刷新和关闭上下文的回调方法。后者将简单地驱动关闭过程，就好像stop()已被显式调用一样，但是当上下文关闭时会发生。
+另一方面，'刷新'回调启用了SmartLifecycle bean的另一个功能。当上下文刷新时（在所有对象被实例化和初始化之后），该回调将被调用，
+并且此时默认生命周期处理器将检查每个SmartLifecycle对象的isAutoStartup()方法返回的布尔值。如果为“true”，那么该对象将在那一刻开始，
+而不是等待显式调用上下文或其自身的start()方法（与上下文刷新不同，上下文开始不会自动为标准上下文实现发生） 。 
+“阶段”值以及任何“依赖”关系将以与上述相同的方式确定启动顺序。
 
 ##### Shutting down the Spring IoC container gracefully in non-web applications
 
