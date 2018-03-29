@@ -1447,11 +1447,99 @@ public interface SmartLifecycle extends Lifecycle, Phased {
 
 ##### Shutting down the Spring IoC container gracefully in non-web applications
 
+如果在非web应用环境中使用了Spring IoC容器，你需要在JVM上注册一个关闭的钩子，以保证能够优雅的关闭，调用相关的销毁方法，使得资源能够释放。
+要注册关闭钩子，需要调用`ConfigurableApplicationContext`接口的registerShutdownHook()方法
+
+```java
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+public final class Boot {
+    public static void main(final String[] args) throws Exception {
+        ConfigurableApplicationContext ctx = new ClassPathXmlApplicationContext(
+            new String []{"beans.xml"});
+        // add a shutdown hook for the above context...
+        ctx.registerShutdownHook();
+        // app runs here...
+        // main method exits, hook is called prior to the app shutting down...
+    }
+}
+```
+
 #### ApplicationContextAware and BeanNameAware
+
+当ApplicationContext创建了一个实现了`org.springframework.context.ApplicationContextAware`接口的对象实例时，
+这个对象得到了一个对ApplicationContext的引用：
+
+```java
+public interface ApplicationContextAware {
+    void setApplicationContext(ApplicationContext applicationContext) throws BeansException;
+}
+```
+
+这样bean能够编程的操纵创建他们的ApplicationContext。有时候这很有用，但通常情况下应该避免这么做。
+因为这会引起与Spring代码的耦合，与控制反转风格相悖。
+
+当ApplicationContext创建了一个实现了`org.springframework.beans.factory.BeanNameAware`接口的对象时，
+这个类得到了一个定义的关联对象的名称的引用。
+
+```java
+public interface BeanNameAware {
+    void setBeanName(String name) throws BeansException;
+}
+```
 
 #### Other Aware interfaces
 
+- ApplicationContextAware
+- ApplicationEventPublisherAware
+- BeanClassLoaderAware
+- BeanFactoryAware
+- BeanNameAware
+- BootstrapContextAware
+- LoadTimeWeaverAware
+- MessageSourceAware
+- NotificationPublisherAware
+- PortletConfigAware
+- PortletContextAware
+- ResourceLoaderAware
+- ServletConfigAware
+- ServletContextAware
+
 ### Bean definition inheritance
+
+```xml
+<bean id="inheritedTestBean" abstract="true" class="org.springframework.beans.TestBean">
+    <property name="name" value="parent"/>
+    <property name="age" value="1"/>
+</bean>
+<bean id="inheritsWithDifferentClass" class="org.springframework.beans.DerivedTestBean"
+ parent="inheritedTestBean" init-method="initialize">
+    <property name="name" value="override"/>
+    <!-- the age property value of 1 will be inherited from parent -->
+</bean>
+```
+
+如果没有指定，则子bean定义使用父定义中的bean类，但也可以覆盖它。 在后一种情况下，子Bean类必须与父类兼容，也就是说，它必须接受父类的属性值。
+子bean定义继承了父级的作用域，构造函数参数值，属性值和方法覆盖，并且可以添加新值。 您指定的任何作用域，初始化方法，销毁方法和/或静态工厂方法设置都将覆盖相应的父设置。
+剩余的设置总是从子定义处得到：依赖，自动装配模式，依赖，单例设置，延迟初始化。
+
+如果父定义没有指定类，则需要将父类定义显式标记为抽象，如下所示：
+
+```xml
+<bean id="inheritedTestBeanWithoutClass" abstract="true">
+    <property name="name" value="parent"/>
+    <property name="age" value="1"/>
+</bean>
+<bean id="inheritsWithClass" class="org.springframework.beans.DerivedTestBean"
+ parent="inheritedTestBeanWithoutClass" init-method="initialize">
+    <property name="name" value="override"/>
+    <!-- age will inherit the value of 1 from the parent bean definition-->
+</bean>
+```
+
+父bean不能自行实例化，因为它是不完整的，并且它也明确标记为抽象。 当定义像这样抽象时，它只能用作纯模板bean定义，作为子定义的父定义。 
+尝试单独使用这样的抽象父bean，通过将其作为另一个bean的ref属性或使用父bean id执行显式getBean()调用返回一个错误。 
+同样，容器的内部preInstantiateSingletons()方法也会忽略定义为抽象的bean定义。
 
 ### Container Extension Points
 
