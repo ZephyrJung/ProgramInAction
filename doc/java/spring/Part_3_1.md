@@ -1543,11 +1543,82 @@ public interface BeanNameAware {
 
 ### Container Extension Points
 
+通常，应用开发者不需要继承ApplicationContext实现类，Spring IoC容器可以通过实现特定的集成接口的插件进行扩展。
+
 #### Customizing beans using a BeanPostProcessor
+
+BeanPostProcessor接口定义了您可以实现的回调方法，以提供您自己的（或覆盖容器的默认）实例化逻辑，依赖关系解析逻辑等等。 
+如果你想在Spring容器完成实例化，配置和初始化bean之后实现一些定制逻辑，你可以插入一个或多个BeanPostProcessor实现。
+
+配置多个BeanPostProcessor实例，可以通过设置`order`属性来控制顺序。BeanPostProcessor实现需要实现`Ordered`接口。
+如果你要写自己的BeanPostProcessor实现，考虑也实现Ordered接口。
+
+BeanPostProcessor作用在实例上，这意味着，Spring IoC容器实例化bean之后，BeanPostProcessor开始工作。
+BeanPostProcessor的作用域仅在当前自身所在的容器中。
 
 ##### Example: Hello World, BeanPostProcessor-style
 
+下面的示例展示了一个自定义的BeanPostProcessor实现，它讲反射每个被容器所创建的bean的toString()方法并将结果字符串打印到系统控制台：
+
+```java
+package scripting;
+import org.springframework.beans.factory.config.BeanPostProcessor;
+import org.springframework.beans.BeansException;
+public class InstantiationTracingBeanPostProcessor implements BeanPostProcessor {
+    // simply return the instantiated bean as-is
+    public Object postProcessBeforeInitialization(Object bean,
+        String beanName) throws BeansException {
+        return bean; // we could potentially return any object reference here...
+    }
+    public Object postProcessAfterInitialization(Object bean,
+        String beanName) throws BeansException {
+        System.out.println("Bean '" + beanName + "' created : " + bean.toString());
+        return bean;
+    }
+}
+```
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:lang="http://www.springframework.org/schema/lang"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans.xsd
+ http://www.springframework.org/schema/lang
+ http://www.springframework.org/schema/lang/spring-lang.xsd">
+    <lang:groovy id="messenger" script-source="classpath:org/springframework/scripting/groovy/Messenger.groovy">
+        <lang:property name="message" value="Fiona Apple Is Just So Dreamy."/>
+    </lang:groovy>
+    <!--
+    when the above bean (messenger) is instantiated, this custom
+    BeanPostProcessor implementation will output the fact to the system console
+    -->
+    <bean class="scripting.InstantiationTracingBeanPostProcessor"/>
+</beans>
+```
+
+可见`InstantiationTracingBeanPostProcessor`的定义十分简单，甚至没有name，它像其他bean一样可以注入依赖
+下面的代码执行了上述代码和配置：
+
+```java
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.scripting.Messenger;
+public final class Boot {
+ public static void main(final String[] args) throws Exception {
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("scripting/beans.xml");
+        Messenger messenger = (Messenger) ctx.getBean("messenger");
+        System.out.println(messenger);
+    }
+}
+```
+
 ##### Example: The RequiredAnnotationBeanPostProcessor
+
+将回调接口或注释与自定义BeanPostProcessor实现结合使用是扩展Spring IoC容器的常用方法。 
+Spring的RequiredAnnotationBeanPostProcessor就是一个例子，它是Spring发行版中的一个BeanPostProcessor实现，
+它确保标记有（任意）注释的bean的JavaBean属性实际（配置为）依赖注入一个值。
 
 #### Customizing configuration metadata with a BeanFactoryPostProcessor
 
