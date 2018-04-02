@@ -1622,11 +1622,89 @@ Spring的RequiredAnnotationBeanPostProcessor就是一个例子，它是Spring发
 
 #### Customizing configuration metadata with a BeanFactoryPostProcessor
 
+`org.springframework.beans.factory.config.BeanFactoryPostProcessor` 接口的语义与`BeanPostProcessor`类似，有一个主要的区别是：
+BeanFactoryPostProcessor作用在bean配置元信息上。亦即Spring IoC容器允许`BeanFactoryPostProcessor`读取配置元信息，并可能在容器实例化除`BeanFactoryPostProcessor`
+以外的Bean之前修改配置。
+
+可以定义多个并通过order属性指定顺序（实现Order接口）
+
+bean工厂后处理器声明在一个ApplicationContext后就会自动执行。Spring包含了一系列的预定义的Bean工厂后处理器，如`PropertyOverrideConfigurer`以及`PropertyPlaceholderConfigurer`。
+
 ##### Example: the Class name substitution PropertyPlaceholderConfigurer
+
+假设有如下的XML配置：
+
+```xml
+<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="locations" value="classpath:com/foo/jdbc.properties"/>
+</bean>
+<bean id="dataSource" destroy-method="close" class="org.apache.commons.dbcp.BasicDataSource">
+    <property name="driverClassName" value="${jdbc.driverClassName}"/>
+    <property name="url" value="${jdbc.url}"/>
+    <property name="username" value="${jdbc.username}"/>
+    <property name="password" value="${jdbc.password}"/>
+</bean>
+```
+
+实际的值从下面文件读取：
+
+```properties
+jdbc.driverClassName=org.hsqldb.jdbcDriver
+jdbc.url=jdbc:hsqldb:hsql://production:9002
+jdbc.username=sa
+jdbc.password=root
+```
+
+`PropertyPlaceholderConfigurer`检查大多数属性中的占位符和bean定义的属性。 此外，占位符前缀和后缀可以自定义。
+在Spring 2.5之后可以使用专门的配置元素配置属性替换，可以提供多个以逗号分隔的位置值：
+
+```xml
+<context:property-placeholder location="classpath:com/foo/jdbc.properties"/>
+```
+
+默认情况下，如果在属性文件中未找到值，还会检查Java系统属性，这一行为可以通过设置`systemPropertiesMode`来自定义：
+
+- never(0): 从不检查系统属性
+- fallback(1): 如果没有合适的值则检查，默认选项
+- override(2): 优先检查系统属性，这允许系统属性覆盖其他的属性来源
+
+你可以使用`PropertyPlaceholderConfigurer`来替换类名。这有时对于运行时选择特定实现类很有用，例如：
+
+```xml
+<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <property name="locations">
+    <value>classpath:com/foo/strategy.properties</value>
+    </property>
+    <property name="properties">
+    <value>custom.strategy.class=com.foo.DefaultStrategy</value>
+    </property>
+</bean>
+<bean id="serviceStrategy" class="${custom.strategy.class}"/>
+```
 
 ##### Example: the PropertyOverrideConfigurer
 
+多个`PropertyOverrideConfigurer`实例定义了同一个bean属性的不同值时，最后一个生效。
+
+显示配置：
+
+```xml
+<context:property-override location="classpath:override.properties"/>
+```
+
 #### Customizing instantiation logic with a FactoryBean
+
+`FactoryBean`接口为Spring IoC容器的实例逻辑提供了一个可插拔的入口。如果你有一个复杂的初始化代码，用Java表达比XML更好时，你可以创建自己的`FactoryBean`
+
+`FactoryBean`接口提供了三个方法：
+
+- Object getObject(): 返回这个工厂创建的对象实例。
+- boolean isSingleton(): 如果是单例bean，则返回true，反之返回false
+- Class getObjectType(): 返回getObject获取的对象的类型，如果未知则返回null
+
+当你需要一个FactoryBean实例本身而非它所创建的bean时，可以在调用getBean时添加前缀`&`。
+因此，要获得id为myBean的工厂bean，调用getBean("myBean")返回的是FactoryBean的产物，另一方面，调用getBean("&myBean")返回的是FactoryBean本身。
+
 
 ### Annotation-based container configuration
 
