@@ -6,7 +6,7 @@ package org.b3log.pattern.chain;
  * Email: yu.zhang@7fresh.com
  */
 public interface ITransformer {
-    boolean isDone();
-    void execute(int taskType);
-    void done();
+    boolean isDone(String action);
+    void execute(String action);
+    void done(String action);
 }
