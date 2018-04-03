@@ -1708,9 +1708,169 @@ jdbc.password=root
 
 ### Annotation-based container configuration
 
+注解注入要先于XML注入执行，所以后者将会覆盖前者
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:context="http://www.springframework.org/schema/context"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+    http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context
+    http://www.springframework.org/schema/context/spring-context.xsd">
+    <context:annotation-config/>
+</beans>
+```
+
+隐式注册的后处理器包括`AutowiredAnnotationBeanPostProcessor`，`CommonAnnotationBeanPostProcessor`，`PersistenceAnnotationBeanPostProcessor`
+以及前面提到的`RequiredAnnotationBeanPostProcessor`
+
+`<context:annotation-config/>` 只会寻找同一应用上下文的bean。这意味着，如果你在一个WebApplicationContext上为DispatcherServlet声明了`<context:annotation-config/>`
+他只会检查controller里的@Autowired，而非service。
+
 #### @Required
 
+@Required注解用于bean属性的setter方法上：
+
+```java
+public class SimpleMovieLister {
+    private MovieFinder movieFinder;
+    @Required
+    public void setMovieFinder(MovieFinder movieFinder) {
+        this.movieFinder = movieFinder;
+    }
+    // ...
+}
+```
+
+这个注解标明作用的bean属性在配置时需要显式指定或者自动装配来填充，如果为填充则引发异常，避免NPE
+建议在bean类放入断言判断，如init方法中，使这些必须的属性值或引用脱离容器时仍然能够强制执行。
+
 #### @Autowired
+
+JSR330的@Inject注解可以替代下面例子中的@Autowired注解
+
+```java
+public class MovieRecommender {
+    private final CustomerPreferenceDao customerPreferenceDao;
+    @Autowired
+    public MovieRecommender(CustomerPreferenceDao customerPreferenceDao) {
+        this.customerPreferenceDao = customerPreferenceDao;
+    }
+    // ...
+}
+```
+
+@Autowired可以用在“传统的”setter方法上:
+
+```java
+public class SimpleMovieLister {
+    private MovieFinder movieFinder;
+    @Autowired
+    public void setMovieFinder(MovieFinder movieFinder) {
+        this.movieFinder = movieFinder;
+    }
+    // ...
+}
+```
+
+可以用在方法上或参数上：
+
+```java
+public class MovieRecommender {
+    private MovieCatalog movieCatalog;
+    private CustomerPreferenceDao customerPreferenceDao;
+    @Autowired
+    public void prepare(MovieCatalog movieCatalog,
+        CustomerPreferenceDao customerPreferenceDao) {
+        this.movieCatalog = movieCatalog;
+        this.customerPreferenceDao = customerPreferenceDao;
+    }
+    // ...
+}
+```
+
+可以用在字段上甚至与构造器混合使用：
+
+```java
+public class MovieRecommender {
+    private final CustomerPreferenceDao customerPreferenceDao;
+    @Autowired
+    private MovieCatalog movieCatalog;
+    @Autowired
+        public MovieRecommender(CustomerPreferenceDao customerPreferenceDao) {
+        this.customerPreferenceDao = customerPreferenceDao;
+    }
+    // ...
+}
+```
+
+可以注入bean数组：
+
+```java
+public class MovieRecommender {
+    @Autowired
+    private MovieCatalog[] movieCatalogs;
+    // ...
+}
+```
+
+可以注入bean集合：
+
+```java
+public class MovieRecommender {
+    private Set<MovieCatalog> movieCatalogs;
+    @Autowired
+    public void setMovieCatalogs(Set<MovieCatalog> movieCatalogs) {
+        this.movieCatalogs = movieCatalogs;
+    }
+    // ...
+}
+```
+
+甚至可以注入Map集合，只要key的类型是String，Map的values将包含所有符合预期类型的bean，key是相应bean的name
+
+```java
+public class MovieRecommender {
+    private Map<String, MovieCatalog> movieCatalogs;
+    @Autowired
+    public void setMovieCatalogs(Map<String, MovieCatalog> movieCatalogs) {
+        this.movieCatalogs = movieCatalogs;
+    }
+    // ...
+}
+```
+
+默认情况，当没有候选者时注入失败。对于注解的方法，构造函数和字段默认是必需的依赖。这一行为可以通过下面的方式改变：
+
+```java
+public class SimpleMovieLister {
+    private MovieFinder movieFinder;
+    @Autowired(required=false)
+    public void setMovieFinder(MovieFinder movieFinder) {
+        this.movieFinder = movieFinder;
+    }
+    // ...
+}
+```
+
+您还可以使用@Autowired作为众所周知的可解析依赖项的接口：BeanFactory，ApplicationContext，Environment，ResourceLoader，
+ApplicationEventPublisher和MessageSource。 这些接口及其扩展接口（如ConfigurableApplicationContext或ResourcePatternResolver）会自动解析，
+无需进行特殊设置。
+
+```java
+public class MovieRecommender {
+    @Autowired
+    private ApplicationContext context;
+    public MovieRecommender() {
+    }
+    // ...
+}
+```
+@Autowired，@Inject，@Resource和@Value注解由Spring BeanPostProcessor实现处理，
+这意味着您不能在您自己的BeanPostProcessor或BeanFactoryPostProcessor类型（如果有）中应用这些注释。 
+这些类型必须通过XML或使用Spring @Bean方法明确“连线”。
 
 #### Fine-tuning annotation-based autowiring with @Primary
 
