@@ -1874,7 +1874,268 @@ public class MovieRecommender {
 
 #### Fine-tuning annotation-based autowiring with @Primary
 
+根据类型匹配时可能产生多个候选者，通过@Primary注解可以指定优先注入（到一个单一值的依赖）
+假设有如下配置定义了firstMoveCatalog为首要MovieCatalog：
+
+```java
+@Configuration
+public class MovieConfiguration {
+    @Bean
+    @Primary
+    public MovieCatalog firstMovieCatalog() { ... }
+    @Bean
+    public MovieCatalog secondMovieCatalog() { ... }
+    // ...
+}
+```
+
+如此，下面的MoveRecommender将自动装配firstMoveCatalog:
+
+```java
+public class MovieRecommender {
+    @Autowired
+    private MovieCatalog movieCatalog;
+    // ...
+}
+```
+
+相应的bean定义如下：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:context="http://www.springframework.org/schema/context"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans.xsd
+ http://www.springframework.org/schema/context
+ http://www.springframework.org/schema/context/spring-context.xsd">
+    <context:annotation-config/>
+    <bean class="example.SimpleMovieCatalog" primary="true">
+    <!-- inject any dependencies required by this bean -->
+    </bean>
+    <bean class="example.SimpleMovieCatalog">
+    <!-- inject any dependencies required by this bean -->
+    </bean>
+    <bean id="movieRecommender" class="example.MovieRecommender"/>
+</beans>
+```
+
 #### Fine-tuning annotation-based autowiring with qualifiers
+
+您可以将限定符值与特定参数相关联，缩小匹配类型的集合，以便为每个参数选择特定的bean。 在最简单的情况下，这可以是一个简单的描述性值：
+
+```java
+public class MovieRecommender {
+    @Autowired
+    @Qualifier("main")
+    private MovieCatalog movieCatalog;
+    // ...
+}
+```
+
+@Qualifier注解可以单独用在构造函数参数或方法参数上
+
+```java
+public class MovieRecommender {
+    private MovieCatalog movieCatalog;
+    private CustomerPreferenceDao customerPreferenceDao;
+    @Autowired
+    public void prepare(@Qualifier("main")MovieCatalog movieCatalog,
+    CustomerPreferenceDao customerPreferenceDao) {
+    this.movieCatalog = movieCatalog;
+    this.customerPreferenceDao = customerPreferenceDao;
+    }
+    // ...
+}
+```
+
+相应定义如下，限定名“main”的bean将装配到有同样限定名的构造器参数中：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:context="http://www.springframework.org/schema/context"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans.xsd
+ http://www.springframework.org/schema/context
+ http://www.springframework.org/schema/context/spring-context.xsd">
+    <context:annotation-config/>
+    <bean class="example.SimpleMovieCatalog">
+    <qualifier value="main"/>
+    <!-- inject any dependencies required by this bean -->
+    </bean>
+    <bean class="example.SimpleMovieCatalog">
+    <qualifier value="action"/>
+    <!-- inject any dependencies required by this bean -->
+    </bean>
+    <bean id="movieRecommender" class="example.MovieRecommender"/>
+</beans>
+```
+
+bean名称可以当做一个默认的限定名。限定符不限制唯一。
+
+如果打算按照名称注入，则不要首先使用@Autowired，即便技术上能通过@Qualifier值引用bean名称。
+应使用@Resource注解，其定义为通过唯一名称来标识特定的目标组件，匹配过程与类型无关。
+@Autowire按类型选择候选bean之后，限定符指定的值只在候选者中考虑。
+@Autowire可以用于字段，构造函数，多参数方法，而@Resource只支持字段和bean属性的setter方法（只有一个参数）
+
+你可以创建自己的限定注解：
+
+```java
+@Target({ElementType.FIELD, ElementType.PARAMETER})
+@Retention(RetentionPolicy.RUNTIME)
+@Qualifier
+public @interface Genre {
+    String value();
+}
+```
+
+然后你可以在字段和参数上提供自定义的限定名：
+
+```java
+public class MovieRecommender {
+    @Autowired
+    @Genre("Action")
+    private MovieCatalog actionCatalog;
+    private MovieCatalog comedyCatalog;
+    @Autowired
+    public void setComedyCatalog(@Genre("Comedy") MovieCatalog comedyCatalog) {
+        this.comedyCatalog = comedyCatalog;
+    }
+    // ...
+}
+```
+
+相应的配置如下，自定义注解需要在type指定完整的类名，如果没有冲突，可以只提供类名：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:context="http://www.springframework.org/schema/context"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans.xsd
+ http://www.springframework.org/schema/context
+ http://www.springframework.org/schema/context/spring-context.xsd">
+    <context:annotation-config/>
+    <bean class="example.SimpleMovieCatalog">
+        <qualifier type="Genre" value="Action"/>
+        <!-- inject any dependencies required by this bean -->
+    </bean>
+    <bean class="example.SimpleMovieCatalog">
+        <qualifier type="example.Genre" value="Comedy"/>
+        <!-- inject any dependencies required by this bean -->
+    </bean>
+    <bean id="movieRecommender" class="example.MovieRecommender"/>
+</beans>
+```
+
+可以定义一个没有值的限定注解：
+
+```java
+@Target({ElementType.FIELD, ElementType.PARAMETER})
+@Retention(RetentionPolicy.RUNTIME)
+@Qualifier
+public @interface Offline {
+}
+```
+
+```java
+public class MovieRecommender {
+ @Autowired
+ @Offline
+ private MovieCatalog offlineCatalog;
+ // ...
+}
+```
+
+```xml
+<bean class="example.SimpleMovieCatalog">
+    <qualifier type="Offline"/>
+    <!-- inject any dependencies required by this bean -->
+</bean>
+```
+
+也可以定义命名属性而非简单的value，以用于多条件匹配：
+
+```java
+@Target({ElementType.FIELD, ElementType.PARAMETER})
+@Retention(RetentionPolicy.RUNTIME)
+@Qualifier
+public @interface MovieQualifier {
+    String genre();
+    Format format();
+}
+```
+
+Format是个枚举：
+
+```java
+public enum Format {
+    VHS, DVD, BLURAY
+}
+```
+
+限定使用如下：
+
+```java
+public class MovieRecommender {
+    @Autowired
+    @MovieQualifier(format=Format.VHS, genre="Action")
+    private MovieCatalog actionVhsCatalog;
+    @Autowired
+    @MovieQualifier(format=Format.VHS, genre="Comedy")
+    private MovieCatalog comedyVhsCatalog;
+    @Autowired
+    @MovieQualifier(format=Format.DVD, genre="Action")
+    private MovieCatalog actionDvdCatalog;
+    @Autowired
+    @MovieQualifier(format=Format.BLURAY, genre="Comedy")
+    private MovieCatalog comedyBluRayCatalog;
+    // ...
+}
+```
+
+相应配置如下：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:context="http://www.springframework.org/schema/context"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans.xsd
+ http://www.springframework.org/schema/context
+ http://www.springframework.org/schema/context/spring-context.xsd">
+    <context:annotation-config/>
+    <bean class="example.SimpleMovieCatalog">
+    <qualifier type="MovieQualifier">
+    <attribute key="format" value="VHS"/>
+    <attribute key="genre" value="Action"/>
+    </qualifier>
+    <!-- inject any dependencies required by this bean -->
+    </bean>
+    <bean class="example.SimpleMovieCatalog">
+    <qualifier type="MovieQualifier">
+    <attribute key="format" value="VHS"/>
+    <attribute key="genre" value="Comedy"/>
+    </qualifier>
+    <!-- inject any dependencies required by this bean -->
+    </bean>
+    <bean class="example.SimpleMovieCatalog">
+    <meta key="format" value="DVD"/>
+    <meta key="genre" value="Action"/>
+    <!-- inject any dependencies required by this bean -->
+    </bean>
+    <bean class="example.SimpleMovieCatalog">
+    <meta key="format" value="BLURAY"/>
+    <meta key="genre" value="Comedy"/>
+    <!-- inject any dependencies required by this bean -->
+    </bean>
+</beans>
+```
 
 #### Using generics as autowiring qualifiers
 
