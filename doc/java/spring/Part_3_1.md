@@ -2139,9 +2139,97 @@ public class MovieRecommender {
 
 #### Using generics as autowiring qualifiers
 
+作为@Qualifier注解的补充，可以使用Java泛型。例如，假设有如下配置：
+
+```java
+@Configuration
+public class MyConfiguration {
+    @Bean
+    public StringStore stringStore() {
+        return new StringStore();
+    }
+    @Bean
+    public IntegerStore integerStore() {
+        return new IntegerStore();
+    }
+}
+```
+
+假设上面的bean实现了一个泛型接口，例如`Store<String>`和`Store<Integer>`
+你可以使用@Autowire装配Store接口：
+
+```java
+@Autowired
+private Store<String> s1; // <String> qualifier, injects the stringStore bean
+@Autowired
+private Store<Integer> s2; // <Integer> qualifier, injects the integerStore bean
+```
+
+泛型限定名同样可应用于Lists，Maps以及Arrays
+
+```java
+// Inject all Store beans as long as they have an <Integer> generic
+// Store<String> beans will not appear in this list
+@Autowired
+private List<Store<Integer>> s;
+```
+
 #### CustomAutowireConfigurer
 
+CustomAutowireConfigurer是一个BeanFactoryPostProcessor，它使您可以注册自己的自定义限定符注释类型，即使它们没有使用Spring的@Qualifier注释进行注释。
+
+```java
+<bean id="customAutowireConfigurer"
+ class="org.springframework.beans.factory.annotation.CustomAutowireConfigurer">
+    <property name="customQualifierTypes">
+        <set>
+            <value>example.CustomQualifier</value>
+        </set>
+    </property>
+</bean>
+```
+
+AutowireCandidateResolver通过以下方式确定自动装配候选者：
+
+- bean定义的autowire-candidate值
+- beans定义的default-autowire-candidates模式
+- @Qualifier注解的以及在CustomAutowireConfigurer中注册的任何自定义注解
+
 #### @Resource
+
+Spring也支持在字段或bean属性setter上使用JSR-250的注解@Resource。这是JavaEE 5和6的通用模式，如JSF 1.2 bean管理或JAX-WS 2.0终端。
+
+@Resource使用name属性，Spring将bean的name值作为默认值注入。
+
+```java
+public class SimpleMovieLister {
+    private MovieFinder movieFinder;
+    @Resource(name="myMovieFinder")
+    public void setMovieFinder(MovieFinder movieFinder) {
+        this.movieFinder = movieFinder;
+    }
+}
+```
+
+如果没有明确的指定名称，他继承字段名或setter方法：
+
+```java
+public class SimpleMovieLister {
+    private MovieFinder movieFinder;
+    @Resource
+    public void setMovieFinder(MovieFinder movieFinder) {
+        this.movieFinder = movieFinder;
+    }
+}
+```
+
+在@Resource用法中，没有指定明确的名称，类似于@Autowired，@Resource查找主类型匹配而不是特定的命名bean，
+并且解析了众所周知的可解析依赖关系：BeanFactory，ApplicationContext，ResourceLoader，ApplicationEventPublisher和MessageSource接口。
+
+因此，在以下示例中，customerPreferenceDao字段首先查找名为customerPreferenceDao的bean，然后返回到CustomerPreferenceDao类型的主类型匹配。 
+“context”字段是基于已知可解析依赖类型ApplicationContext注入的。
+
+
 
 #### PostConstruct and @PreDestroy
 
