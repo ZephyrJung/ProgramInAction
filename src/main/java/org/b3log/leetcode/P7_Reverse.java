@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * @author Zhang Yu
  * Date: 18年3月20日
- * Email: yu.zhang@7fresh.com
+ * Email: 2895205695@qq.com
  * 给定一个范围为 32 位 int 的整数，将其颠倒。
  * 例 1:
  * 输入: 123

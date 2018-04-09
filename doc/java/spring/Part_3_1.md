@@ -2231,7 +2231,28 @@ public class SimpleMovieLister {
 
 #### PostConstruct and @PreDestroy
 
+CommonAnnotationBeanPostProcessor 不仅可以识别@Resource注解，还可以识别JSR-250生命周期注解。
+下面的例子中，cache将在初始化之前填充(populate)，在销毁之前清理(clear)：
+
+```java
+public class CachingMovieLister {
+    @PostConstruct
+    public void populateMovieCache() {
+        // populates the movie cache upon initialization...
+    }
+    @PreDestroy
+    public void clearMovieCache() {
+        // clears the movie cache upon destruction...
+    }
+}
+```
+
 ### Classpath scanning and managed components
+
+本章的大部分示例中，在Spring容器中生产BeanDefinition的配置元信息使用XML定义。上一部分的注解展示了许多代码级别的注释作为配置元信息。
+即便如此，基本的bean定仍然在XML中。本节描述的是，通过扫描classpath隐式的检测候选的组件。
+候选组件是能够匹配过滤标准并在容器中有相应的bean定义注册的类，如此可以免去XML定义。
+可以使用注解（如@Component），AspectJ类型表达式，或自定义的过滤标准来选择哪些类的bean定义注册到容器中。
 
 #### @Component and further stereotype annotations
 

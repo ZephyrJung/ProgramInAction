@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * @author Zhang Yu
  * Date: 18年4月3日
- * Email: yu.zhang@7fresh.com
+ * Email: 2895205695@qq.com
  */
 @Data
 public abstract class TransformerAction implements ITransformer,Ordered {

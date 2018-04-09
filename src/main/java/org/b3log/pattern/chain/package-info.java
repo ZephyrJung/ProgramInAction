@@ -1,7 +1,7 @@
 /**
  * @author Zhang Yu
  * Date: 18年4月2日
- * Email: yu.zhang@7fresh.com
+ * Email: 2895205695@qq.com
  *
  * 责任链模式要素：
  * 1. 任务中心，负责向责任链发出任务，推动责任链
