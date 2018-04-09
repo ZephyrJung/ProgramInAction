@@ -1,6 +1,6 @@
 package org.b3log.pattern.proxy.ticket;
 
-import org.b3log.pattern.proxy.travel.Path;
+import org.b3log.pattern.proxy.domain.Path;
 
 /**
  * Created by Zephyr on 2017/1/6.

@@ -15,5 +15,13 @@ public class Ticket {
     private String end;
     private String date;
     private String price;
-    private boolean checked=false;
+    private boolean checked;
+
+    public Ticket(String start,String end,String date,String price){
+        this.start = start;
+        this.end = end;
+        this.date = date;
+        this.price = price;
+        this.checked = false;
+    }
 }

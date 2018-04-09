@@ -2229,8 +2229,6 @@ public class SimpleMovieLister {
 因此，在以下示例中，customerPreferenceDao字段首先查找名为customerPreferenceDao的bean，然后返回到CustomerPreferenceDao类型的主类型匹配。 
 “context”字段是基于已知可解析依赖类型ApplicationContext注入的。
 
-
-
 #### PostConstruct and @PreDestroy
 
 ### Classpath scanning and managed components
