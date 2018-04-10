@@ -2256,9 +2256,115 @@ public class CachingMovieLister {
 
 #### @Component and further stereotype annotations
 
+@Repository注释是任何实现存储库（也称为数据访问对象或DAO）的角色或构造型的类的标记。 这种标记的用途是自动翻译异常，如“异常翻译”一节所述。
+
+此外，Spring提供了更多的构造型注解：@Component，@Service和@Controller。@Component是任何Spring管理组件的通用模式，而@Service，@Repository，@Controller是@Component的具体化。
+
+
 #### Meta-annotations
 
+Spring提供的注解大都可以用作元注解。所谓元注解就是可以用在其他注解的注解。例如，@Service注解上有@Component注解：
+
+```java
+@Target(ElementType.TYPE)
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Component // Spring will see this and treat @Service in the same way as @Component
+public @interface Service {
+ // ....
+}
+```
+
+元注解也可以用来组合形成复合注解，例如@RestController注解是由@Controller注解和@ResponseBody注解组合而成
+
+另外，组合的注释可以可选地重新声明来自元注释的属性以允许用户定制。 当你只想公开一部分metaannotation的属性时，这可能特别有用。
+例如，Spring的@SessionScope注解将范围名称硬编码为会话，但仍允许定制proxyMode。
+
+```java
+@Target({ElementType.TYPE, ElementType.METHOD})
+@Retention(RetentionPolicy.RUNTIME)
+@Documented
+@Scope(WebApplicationContext.SCOPE_SESSION)
+public @interface SessionScope {
+ /**
+ * Alias for {@link Scope#proxyMode}.
+ * <p>Defaults to {@link ScopedProxyMode#TARGET_CLASS}.
+ */
+ @AliasFor(annotation = Scope.class)
+ ScopedProxyMode proxyMode() default ScopedProxyMode.TARGET_CLASS;
+}
+```
+
+@SessionScope可以如下使用而无需声明proxyMode：
+
+```java
+@Service
+@SessionScope
+public class SessionScopedService {
+ // ...
+}
+```
+
+或者覆盖proxMode：
+
+```java
+@Service
+@SessionScope(proxyMode = ScopedProxyMode.INTERFACES)
+public class SessionScopedUserService implements UserService {
+ // ...
+}
+```
+
 #### Automatically detecting classes and registering bean definitions
+
+Spring能够自动检测原型类并在ApplicationContext中注册相应的BeanDefinition。例如，下面的两个类能够被自动检测：
+
+```java
+@Service
+public class SimpleMovieLister {
+    private MovieFinder movieFinder;
+    @Autowired
+    public SimpleMovieLister(MovieFinder movieFinder) {
+        this.movieFinder = movieFinder;
+    }
+}
+```
+
+```java
+@Repository
+public class JpaMovieFinder implements MovieFinder {
+    // implementation elided for clarity
+}
+```
+
+为了自动检测并注册这些类，需要在@Configuration类上添加@ComponentScan注解。basePackages是这两个类的公共父包（可以定义以逗号，分号，空格分隔的包含每个类的包的列表）
+
+```java
+@Configuration
+@ComponentScan(basePackages = "org.example")
+public class AppConfig {
+ ...
+}
+```
+
+下面是同等的XML：
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xmlns:context="http://www.springframework.org/schema/context"
+ xsi:schemaLocation="http://www.springframework.org/schema/beans
+ http://www.springframework.org/schema/beans/spring-beans.xsd
+ http://www.springframework.org/schema/context
+ http://www.springframework.org/schema/context/spring-context.xsd">
+    <context:component-scan base-package="org.example"/>
+</beans>
+```
+
+`<context:component-scan>`隐式的开启了`<context:annotation-confg>`的功能，因此通常在使用前者后无需再声明后者
+
+此外，AutowiredAnnotationBeanPostProcessor和CommonAnnotationBeanPostProcessor都在使用组件扫描时隐式包含了。
 
 #### Using filters to customize scanning
 
