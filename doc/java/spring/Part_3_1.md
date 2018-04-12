@@ -2368,6 +2368,38 @@ public class AppConfig {
 
 #### Using filters to customize scanning
 
+默认情况下，只有被@Component，@Repository，@Service，@Controller或有@Component元注解的注解的类才能被探测为候选组件。
+可以在@ComponentScan参数中设置includeFilters或excludeFilters，需要type和expression属性：
+
+- annotation(默认) : org.example.SomeAnnotation
+- assignable : org.example.SomeClass
+- aspectj : org.example..*Service+
+- regex : org\.example\.Default.*
+- custom : org.example.MyTypeFilter
+
+下面的这个配置忽略了所有@Repository注解，用“stub”作为替代
+
+```java
+@Configuration
+@ComponentScan(basePackages = "org.example",
+    includeFilters = @Filter(type = FilterType.REGEX, pattern = ".*Stub.*Repository"),
+    excludeFilters = @Filter(Repository.class))
+public class AppConfig {
+    ...
+}
+```
+
+XML写法为：
+
+```xml
+<beans>
+    <context:component-scan base-package="org.example">
+    <context:include-filter type="regex" expression=".*Stub.*Repository"/>
+    <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Repository"/>
+    </context:component-scan>
+</beans>
+```
+
 #### Defining bean metadata within components
 
 #### Naming autodetected components
