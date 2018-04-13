@@ -2400,7 +2400,68 @@ XML写法为：
 </beans>
 ```
 
-#### Defining bean metadata within components
+#### Defining bean metadata within 
+
+Spring组件也可以将bean定义元数据提供给容器。 您可以使用相同的@Bean注释来定义@Configuration注释类中的bean元数据。 这是一个简单的例子：
+
+```java
+@Component
+public class FactoryMethodComponent {
+    @Bean
+    @Qualifier("public")
+    public TestBean publicInstance() {
+        return new TestBean("publicInstance");
+    }
+    public void doWork() {
+        // Component method implementation omitted
+    }
+}
+```
+
+@Bean注解标识了一个工厂方法及其他的bean定义属性，如@Qualifier指定限定名，其他方法级的注解可以为@Scope, @Lazy和自定义限定注解
+
+自动装配的字段和方法同样可以作为@Bean方法的补充
+
+```java
+@Component
+public class FactoryMethodComponent {
+    private static int i;
+    @Bean
+    @Qualifier("public")
+    public TestBean publicInstance() {
+        return new TestBean("publicInstance");
+    }
+    // use of a custom qualifier and autowiring of method parameters
+    @Bean
+    protected TestBean protectedInstance(
+        @Qualifier("public") TestBean spouse,
+        @Value("#{privateInstance.age}") String country) {
+        TestBean tb = new TestBean("protectedInstance", 1);
+        tb.setSpouse(spouse);
+        tb.setCountry(country);
+        return tb;
+    }
+    @Bean
+    private TestBean privateInstance() {
+        return new TestBean("privateInstance", i++);
+    }
+    @Bean
+    @RequestScope
+    public TestBean requestScopedInstance() {
+        return new TestBean("requestScopedInstance", 3);
+    }
+}
+```
+
+```java
+@Component
+public class FactoryMethodComponent {
+    @Bean @Scope("prototype")
+    public TestBean prototypeInstance(InjectionPoint injectionPoint) {
+    return new TestBean("prototypeInstance for " + injectionPoint.getMember());
+    }
+}
+```
 
 #### Naming autodetected components
 
