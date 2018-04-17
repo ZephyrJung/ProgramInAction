@@ -2400,7 +2400,7 @@ XML写法为：
 </beans>
 ```
 
-#### Defining bean metadata within 
+#### Defining bean metadata within components
 
 Spring组件也可以将bean定义元数据提供给容器。 您可以使用相同的@Bean注释来定义@Configuration注释类中的bean元数据。 这是一个简单的例子：
 
@@ -2465,9 +2465,109 @@ public class FactoryMethodComponent {
 
 #### Naming autodetected components
 
+当组件被扫描处理自动探测到时，它的name由BeanNameGenerator策略生成。
+默认情况下，任何Spring原型注解（@Component，@Repository，@Service和@Controller）包含的name值（value)都将为相应的bean定义提供名称。
+
+如果注解中不包含名称value，或其他探测到的组件（如通过自定义过滤器），默认名称产生器将返回小写的无限定类名。
+如下面两个组件，名称将是myMovieLister和movieFinderImpl:
+
+```java
+@Service("myMovieLister")
+public class SimpleMovieLister {
+    // ...
+}
+```
+
+```java
+@Repository
+public class MovieFinderImpl implements MovieFinder {
+    // ...
+}
+```
+
+如果不想依赖于默认的命名策略，可以和提供一个自定义的。首先，实现`BeanNameGenerator`接口，要包含一个默认的无参构造函数。
+其次，在配置扫描时提供完全限定类名：
+
+```java
+@Configuration
+@ComponentScan(basePackages = "org.example",nameGenerator = MyNameGenerator.class)
+public class AppConfig {
+    ...
+}
+```
+
+```xml
+<beans>
+    <context:component-scan base-package="org.example" name-generator="org.example.MyNameGenerator" />
+</beans>
+```
+
+作为一个通用规范，考虑在使用注解时总是指定名称，以便可以明确引用。另一方面，自动生成的名称在容器准备装配式总是够用的。
+
 #### Providing a scope for autodetected components
 
+```java
+@Scope("prototype")
+@Repository
+public class MovieFinderImpl implements MovieFinder {
+    // ...
+}
+```
+
+可以实现自定义的作用域策略，实现`ScopeMetadataResolver`接口，确保含有无参构造函数：
+
+```java
+@Configuration
+@ComponentScan(basePackages = "org.example", scopeResolver = MyScopeResolver.class)
+public class AppConfig {
+    ...
+}
+```
+
+```xml
+<beans>
+    <context:component-scan base-package="org.example" scope-resolver="org.example.MyScopeResolver" />
+</beans>
+```
+
+在使用某些非单例作用域时，可能需要为作用域对象生成代理。 其理由在“作用域bean与依赖”章节中描述。 
+为此，组件扫描元素上提供了scoped-proxy属性。 三个可能的值是：no，interfaces和targetClass。 例如，以下配置将导致标准的JDK动态代理：
+
+```java
+@Configuration
+@ComponentScan(basePackages = "org.example", scopedProxy = ScopedProxyMode.INTERFACES)
+public class AppConfig {
+    ...
+}
+```
+
+```xml
+<beans>
+    <context:component-scan base-package="org.example" scoped-proxy="interfaces" />
+</beans>
+```
+
 #### Providing a qualifier metadata with annotations
+
+```java
+@Component
+@Qualifier("Action")
+public class ActionMovieCatalog implements MovieCatalog {
+    // ...
+}
+
+@Component
+@Genre("Action")
+public class ActionMovieCatalog implements MovieCatalog {
+    // ...
+}
+
+@Component
+@Offline
+public class CachingMovieCatalog implements MovieCatalog {
+    // ...
+}
+```
 
 ### Using JSR 330 Standard Annotations
 
