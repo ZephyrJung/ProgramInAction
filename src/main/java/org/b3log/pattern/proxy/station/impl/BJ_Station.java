@@ -12,7 +12,7 @@ import java.util.Date;
 /**
  * Created by Zephyr on 2017/1/6.
  */
-@Service
+@Service("beijing")
 public class BJ_Station extends Station implements TicketSeller {
     public BJ_Station(){
         super();
@@ -21,8 +21,8 @@ public class BJ_Station extends Station implements TicketSeller {
     @Override
     public Ticket buyTicket(String end, Date date) {
         switch(end){
-            case "SH":return toShangHai(getDate(date));
-            case "ZZ":return toZhengZhou(getDate(date));
+            case "shanghai":return toShangHai(getDate(date));
+            case "zhengzhou":return toZhengZhou(getDate(date));
         }
         return null;
     }

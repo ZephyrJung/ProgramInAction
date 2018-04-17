@@ -38,7 +38,7 @@ public class Application {
 
     private static void proxy(ApplicationContext context){
         TicketCenter ticketCenter=context.getBean(TicketCenter.class);
-        Path path=new Path("ZZ","SH",new Date());
+        Path path=new Path("zhengzhou","shanghai",new Date());
         Ticket ticket = ticketCenter.getTicket(path);//获得北京到上海的车票
         Train train=context.getBean(Train.class);
         train.setTicket(ticket);

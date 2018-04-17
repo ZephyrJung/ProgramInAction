@@ -15,6 +15,6 @@ public class TicketSellHallImpl implements TicketSellHall {
 
     @Override
     public TicketSeller getTicketSeller(String start) {
-        return ticketSeller.get(start+"_Station");
+        return ticketSeller.get(start);
     }
 }
