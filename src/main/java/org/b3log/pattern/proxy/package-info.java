@@ -8,5 +8,6 @@
  * 购票网站是一个代理系统(TicketCenter)，它承接用户请求，去内接的各个车站(TicketSellerHall)找到对应的车站系统(TicketSeller)检查是否有票，然后出票（Ticket），再交给用户
  * 用户则持车票去车站乘车(Train)
  *
+ * 
  */
 package org.b3log.pattern.proxy;
