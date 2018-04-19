@@ -7,4 +7,5 @@ package org.b3log.pattern.strategy.food;
  **/
 public abstract class Food {
     protected String name;
+    protected String taste;
 }

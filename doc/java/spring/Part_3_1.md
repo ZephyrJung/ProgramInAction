@@ -2571,11 +2571,110 @@ public class CachingMovieCatalog implements MovieCatalog {
 
 ### Using JSR 330 Standard Annotations
 
+Spring 3.0开始对JSR-330标准的注解进行了支持，用法同Spring注解，只需要添加相应的依赖，如：
+
+```xml
+<dependency>
+    <groupId>javax.inject</groupId>
+    <artifactId>javax.inject</artifactId>
+    <version>1</version>
+</dependency>
+```
+
 #### Dependency Injection with @Inject and @Named
+
+```java
+import javax.inject.Inject;
+public class SimpleMovieLister {
+    private MovieFinder movieFinder;
+    @Inject
+    public void setMovieFinder(MovieFinder movieFinder) {
+        this.movieFinder = movieFinder;
+    }
+    public void listMovies() {
+        this.movieFinder.findMovies(...);
+        ...
+    }
+}
+```
+
+可以声明为`Provider`，在更短生命周期或者延迟加载的bean中可以通过Provider.get()访问
+
+```java
+import javax.inject.Inject;
+import javax.inject.Provider;
+public class SimpleMovieLister {
+    private Provider<MovieFinder> movieFinder;
+    public void listMovies() {
+    this.movieFinder.get().findMovies(...);
+        ...
+    }
+}
+```
+
+注入限定名称的依赖：
+
+```java
+import javax.inject.Inject;
+import javax.inject.Named;
+public class SimpleMovieLister {
+    private MovieFinder movieFinder;
+    @Inject
+    public void setMovieFinder(@Named("main") MovieFinder movieFinder) {
+        this.movieFinder = movieFinder;
+    }
+    // ...
+}
+```
 
 #### @Named and @ManagedBean: standard equivalents to the @Component annotation
 
+用法如下：
+
+```java
+import javax.inject.Inject;
+import javax.inject.Named;
+@Named("movieListener") // @ManagedBean("movieListener") could be used as well
+public class SimpleMovieLister {
+    private MovieFinder movieFinder;
+    @Inject
+    public void setMovieFinder(MovieFinder movieFinder) {
+        this.movieFinder = movieFinder;
+    }
+    // ...
+}
+```
+
+@Named也可以像@Component一样无需限定名称使用：
+
+```java
+import javax.inject.Inject;
+import javax.inject.Named;
+@Named
+public class SimpleMovieLister {
+    private MovieFinder movieFinder;
+    @Inject
+    public void setMovieFinder(MovieFinder movieFinder) {
+        this.movieFinder = movieFinder;
+    }
+    // ...
+}
+```
+
+使用@Named和@ManagedBean注解，同样能被Spring组件扫描探测到。
+
 #### Limitations of JSR-330 standard annotations
+
+| Spring              | java.inject.*         | java.inject restrictions / comments |
+|---------------------|-----------------------|-------------------------------------|
+| @Autowired          | @Inject               |                                     |
+| @Component          | @Named / @ManagedBean |                                     |
+| @Scope("singleton") | @Singleton            |                                     |
+| @Qualifier          | @Qualifier / @Named   |                                     |
+| @Value              | -                     |                                     |
+| @Required           | -                     |                                     |
+| @Lazy               | -                     |                                     |
+| ObjectFactory       | Provider              |                                     |
 
 ### Java-based container configuration
 
