@@ -2680,6 +2680,34 @@ public class SimpleMovieLister {
 
 #### Basic concepts: @Bean and @Configuration
 
+Spring对于Java注解的最新支持的核心部分是@Configuration注解的类和@Bean注解的方法。
+
+@Bean注解用于表示一个方法实例，配置并初始化一个新的对象，以令Spring IoC容器进行管理。
+你可以在任何Spring @Component下使用@Bean注解，然而，他们通常用于@Configuration
+
+类通过@Configuration进行注解代表它的主要目的是bean定义的来源。此外，@Configuration类允许交互bean的依赖通过简单地调用其他@Bean方法来定义。
+最简单地可能@Configuration类可能是如下样子：
+
+```java
+@Configuration
+public class AppConfig {
+    @Bean
+    public MyService myService() {
+        return new MyServiceImpl();
+    }
+}
+```
+
+上面的类等价于下面的Spring XML:
+
+```xml
+<beans>
+    <bean id="myService" class="com.acme.services.MyServiceImpl"/>
+</beans>
+```
+
+建议将@Bean方法总是用于@Configuration类中，以阻止同样的@Bean方法被调用多次，减少轻模式带来的难以跟踪的小bug
+
 #### Instantiating the Spring container using AnnotationConfigApplicationContext Simple construction
 
 ##### Simple construction
