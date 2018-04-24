@@ -2712,11 +2712,127 @@ public class AppConfig {
 
 ##### Simple construction
 
+与实例化ClassPathXmlApplicationContext时使用Spring XML文件的输入方式大致相同，在Spring实例化AnnotationConfigApplicationContext时，@Configuration类可以用作输入。 
+这允许完全无XML地使用Spring容器：
+
+```java
+public static void main(String[] args) {
+    ApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
+    MyService myService = ctx.getBean(MyService.class);
+    myService.doStuff();
+}
+```
+
+如上所述，AnnotationConfigApplicationContext不仅限于使用@Configuration类。 
+任何@Component或JSR-330注释类都可以作为输入提供给构造函数。 例如：
+
+```java
+public static void main(String[] args) {
+    ApplicationContext ctx = new AnnotationConfigApplicationContext(MyServiceImpl.class,
+    Dependency1.class, Dependency2.class);
+    MyService myService = ctx.getBean(MyService.class);
+    myService.doStuff();
+}
+```
+
+上面假设MyServiceImpl，Dependency1和Dependency2使用Spring依赖注入注释，例如@Autowired。
+
 ##### Building the container programmatically using register(Class<?>...)
+
+AnnotationConfigApplicationContext可以使用无参数构造函数实例化，然后使用register()方法进行配置。 
+以编程方式构建AnnotationConfigApplicationContext时，此方法特别有用。
+
+```java
+public static void main(String[] args) {
+    AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
+    ctx.register(AppConfig.class, OtherConfig.class);
+    ctx.register(AdditionalConfig.class);
+    ctx.refresh();
+    MyService myService = ctx.getBean(MyService.class);
+    myService.doStuff();
+}
+```
 
 ##### Enabling component scanning with scan(String...)
 
+要开启组件扫描，只需要在@Configuration类做如下注解：
+
+```java
+@Configuration
+@ComponentScan(basePackages = "com.acme")
+public class AppConfig {
+    ...
+}
+```
+
+可以以方法调用的形式达到同样效果
+
+```java
+public static void main(String[] args) {
+    AnnotationConfigApplicationContext ctx = new AnnotationConfigApplicationContext();
+    ctx.scan("com.acme");
+    ctx.refresh();
+    MyService myService = ctx.getBean(MyService.class);
+}
+```
+
+请记住@Configuration类是用@Component进行元注释的，所以它们是组件扫描的候选对象！ 
+在上面的例子中，假设AppConfig是在com.acme包（或下面的任何包）中声明的，
+它将在调用scan()期间被拾取，并且在refresh()后，将处理其所有的@Bean方法， 在容器中注册为bean定义。
+
 ##### Support for web applications with AnnotationConfigWebApplicationContext
+
+AnnotationConfigApplicationContext的WebApplicationContext变体可与AnnotationConfigWebApplicationContext一起使用。 
+当配置Spring ContextLoaderListener servlet监听器，Spring MVC DispatcherServlet等时，可以使用此实现。
+接下来是配置典型Spring MVC Web应用程序的web.xml片段。 请注意contextClass context-param和init-param的使用：
+
+```xml
+<web-app>
+    <!-- Configure ContextLoaderListener to use AnnotationConfigWebApplicationContext
+    instead of the default XmlWebApplicationContext -->
+    <context-param>
+    <param-name>contextClass</param-name>
+        <param-value>
+            org.springframework.web.context.support.AnnotationConfigWebApplicationContext
+        </param-value>
+    </context-param>
+    <!-- Configuration locations must consist of one or more comma- or space-delimited
+    fully-qualified @Configuration classes. Fully-qualified packages may also be
+    specified for component-scanning -->
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>com.acme.AppConfig</param-value>
+    </context-param>
+    <!-- Bootstrap the root application context as usual using ContextLoaderListener -->
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+    <!-- Declare a Spring MVC DispatcherServlet as usual -->
+    <servlet>
+        <servlet-name>dispatcher</servlet-name>
+        <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+        <!-- Configure DispatcherServlet to use AnnotationConfigWebApplicationContext
+        instead of the default XmlWebApplicationContext -->
+        <init-param>
+            <param-name>contextClass</param-name>
+            <param-value>
+                org.springframework.web.context.support.AnnotationConfigWebApplicationContext
+            </param-value>
+        </init-param>
+        <!-- Again, config locations must consist of one or more comma- or space-delimited
+        and fully-qualified @Configuration classes -->
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>com.acme.web.MvcConfig</param-value>
+        </init-param>
+    </servlet>
+    <!-- map all requests for /app/* to the dispatcher servlet -->
+    <servlet-mapping>
+        <servlet-name>dispatcher</servlet-name>
+        <url-pattern>/app/*</url-pattern>
+    </servlet-mapping>
+</web-app>
+```
 
 #### Using the @Bean annotation
 

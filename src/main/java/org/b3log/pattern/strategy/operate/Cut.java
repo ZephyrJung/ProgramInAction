@@ -8,7 +8,15 @@ import org.b3log.pattern.strategy.food.Food;
  * Email : yu.zhang@7fresh.com
  **/
 public interface Cut {
-    default void cutToSlice(Food food){System.out.println("切成片");};
-    void cutToPiece(Food food);
-    void cutToBlock(Food food);
+    default void cutToSlice(Food food) {
+        System.out.println("把【" + food.getName() + "】切成片");
+    }
+
+    default void cutToPiece(Food food) {
+        System.out.println("把【" + food.getName() + "】切成丝");
+    }
+
+    default void cutToBlock(Food food) {
+        System.out.println("把【" + food.getName() + "】切成块");
+    }
 }
