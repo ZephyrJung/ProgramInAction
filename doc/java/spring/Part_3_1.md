@@ -2838,7 +2838,42 @@ AnnotationConfigApplicationContext的WebApplicationContext变体可与Annotation
 
 ##### Declaring a bean
 
+声明一个bean，只需要在方法上加上@Bean注解。使用这个方法的返回值来在ApplicationContext中注册一个bean定义。
+默认情况下bean名称与方法名称相同。如下是一个简单地示例：
+
+```java
+@Configuration
+public class AppConfig {
+    @Bean
+    public TransferService transferService() {
+        return new TransferServiceImpl();
+    }
+}
+```
+
+上面的定义与下面的Spring XML等价：
+
+```xml
+<beans>
+    <bean id="transferService" class="com.acme.TransferServiceImpl"/>
+</beans>
+```
+
+两周定义都会在ApplicationContext中声明一个名为transferService的bean，与TransferServiceImpl类型对象实例绑定。
+
 ##### Bean dependencies
+
+@Bean注解的方法可以接受任意数量的参数以描述构建这个bean需要的依赖：
+
+```java
+@Configuration
+public class AppConfig {
+    @Bean
+    public TransferService transferService(AccountRepository accountRepository) {
+        return new TransferServiceImpl(accountRepository);
+    }
+}
+```
 
 ##### Receiving lifecycle callbacks
 
