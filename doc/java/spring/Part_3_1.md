@@ -2877,6 +2877,68 @@ public class AppConfig {
 
 ##### Receiving lifecycle callbacks
 
+@Bean注解定义的类可以通过@PostConstruct和@PreDestroy注解来支持常规的生命周期回调
+
+实现了InitializingBean，DisposableBean或Lifecycle接口的bean也可以完全支持Spring的生命周期回调，相应的方法将被容器调用
+
+标准的*Aware接口集，如BeanFactoryAware，BeanNameAware，MessageSourceAware，ApplicationContextAware等也是完全支持的。
+
+@Bean注解能够接收任意的初始化和销毁回调方法，类似于XML定义中bean元素的init-method和destory-method属性：
+
+```java
+public class Foo {
+    public void init() {
+    // initialization logic
+    }
+}
+public class Bar {
+    public void cleanup() {
+    // destruction logic
+    }
+}
+@Configuration
+public class AppConfig {
+    @Bean(initMethod = "init")
+    public Foo foo() {
+        return new Foo();
+    }
+    @Bean(destroyMethod = "cleanup")
+    public Bar bar() {
+        return new Bar();
+    }
+}
+```
+
+默认情况下，使用具有公共close或shutdown方法的Java配置定义的bean将自动列入销毁回调。 
+如果你有一个公共close或shutdown方法，并且你不希望在容器关闭时调用它，
+只需在你的bean定义中添加@Bean（destroyMethod =“”）来禁用默认（推断）模式。
+
+```java
+@Bean(destroyMethod="")
+public DataSource dataSource() throws NamingException {
+    return (DataSource) jndiTemplate.lookup("MyDS");
+}
+```
+
+另外，使用@Bean方法，您通常会选择使用编程式JNDI查找：使用Spring的JndiTemplate / JndiLocatorDelegate帮助程序或直接使用JNDI InitialContext，
+但不使用JndiObjectFactoryBean变体，这会强制您将返回类型声明为FactoryBean类型，而不是 实际的目标类型，
+这使得在其他@Bean方法中用于引用所提供资源的交叉引用调用更加困难。
+
+当然，对于上面的Foo类，你可以直接在方法中调用init方法：
+
+```java
+@Configuration
+public class AppConfig {
+    @Bean
+    public Foo foo() {
+        Foo foo = new Foo();
+        foo.init();
+        return foo;
+    }
+    // ...
+}
+```
+
 ##### Specifying bean scope
 
 ##### Customizing bean naming
