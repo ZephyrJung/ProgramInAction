@@ -2941,15 +2941,87 @@ public class AppConfig {
 
 ##### Specifying bean scope
 
+###### Using the @Scope annotation
+
+默认作用域为`singleton`，可以通过@Scope注解覆盖：
+
+```java
+@Configuration
+public class MyConfiguration {
+    @Bean
+    @Scope("prototype")
+    public Encryptor encryptor() {
+        // ...
+    }
+}
+```
+
+###### @Scope and scoped-proxy
+
+
+
 ##### Customizing bean naming
+
+默认情况下，配置类使用@Bean方法的名称作为结果bean的名称。可以通过name属性覆盖:
+
+```java
+@Configuration
+public class AppConfig {
+    @Bean(name = "myFoo")
+    public Foo foo() {
+        return new Foo();
+    }
+}
+```
 
 ##### Bean aliasing
 
+可以为name属性指定字符串数组来指定多个别名：
+
+```java
+@Configuration
+public class AppConfig {
+    @Bean(name = { "dataSource", "subsystemA-dataSource", "subsystemB-dataSource" })
+    public DataSource dataSource() {
+        // instantiate, configure and return DataSource bean...
+    }
+}
+```
+
 ##### Bean description
+
+```java
+@Configuration
+public class AppConfig {
+    @Bean
+    @Description("Provides a basic example of a bean")
+    public Foo foo() {
+        return new Foo();
+    }
+}
+```
 
 #### Using the @Configuration annotation
 
 ##### Injecting inter-bean dependencies
+
+当Bean相互之间有依赖时，只需要进行调用即可描述：
+
+```java
+@Configuration
+public class AppConfig {
+    @Bean
+    public Foo foo() {
+        return new Foo(bar());
+    }
+    @Bean
+    public Bar bar() {
+        return new Bar();
+    }
+}
+```
+
+这种声明方法只有在@Bean方法声明在@Configuration类下时才能生效。
 
 ##### Lookup method injection
 
