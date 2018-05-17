@@ -3027,6 +3027,33 @@ public class AppConfig {
 
 ##### Further information about how Java-based configuration works internally
 
+下面的例子展示了@Bean注解的方法被调用了两次：
+
+```java
+@Configuration
+public class AppConfig {
+    @Bean
+    public ClientService clientService1() {
+    ClientServiceImpl clientService = new ClientServiceImpl();
+    clientService.setClientDao(clientDao());
+        return clientService;
+    }
+    @Bean
+    public ClientService clientService2() {
+    ClientServiceImpl clientService = new ClientServiceImpl();
+    clientService.setClientDao(clientDao());
+        return clientService;
+    }
+    @Bean
+    public ClientDao clientDao() {
+        return new ClientDaoImpl();
+    }
+}
+```
+
+由于clientDao方法被调用了两次，你可能自然而然人为有两个clientDao的实例。然而，在Spring中，bean的默认作用域是singleton，
+所有@Configuration类都是CGLIB的子类，在这些子类中，子方法会在调用父方法进行创建实例前先检查是否有缓存bean的存在。
+
 #### Composing Java-based configurations
 
 ##### Using the @Import annotation
