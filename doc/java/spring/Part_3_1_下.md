@@ -170,7 +170,34 @@ public static void main(String[] args) {
 
 ##### Conditionally include @Configuration classes or @Bean methods
 
+如@Profile注解，可以根据profile不同来激活特定的bean。@Profile注解实际上由一个更灵活的注解@Conditional实现。
+如下面的例子，是@Condition为@Profile的实现：
+
+```java
+@Override
+public boolean matches(ConditionContext context, AnnotatedTypeMetadata metadata) {
+    if (context.getEnvironment() != null) {
+        // Read the @Profile annotation attributes
+        MultiValueMap<String, Object> attrs =
+        metadata.getAllAnnotationAttributes(Profile.class.getName());
+        if (attrs != null) {
+            for (Object value : attrs.get("value")) {
+                if (context.getEnvironment().acceptsProfiles(((String[]) value))) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+    return true;
+}
+```
+
 ##### Combining Java and XML configuration
+
+###### XML-centric use of @Configuration classes
+
+###### @Configuration class-centric use of XML with @ImportResource
 
 ### Environment abstraction
 
