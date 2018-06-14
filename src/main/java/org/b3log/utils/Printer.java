@@ -12,4 +12,13 @@ public class Printer {
         }
         System.out.println(objects[objects.length-1]);
     }
+
+    public static void printArray(int[][] array){
+        for(int[] a : array){
+            for(int b: a){
+                System.out.print(b+",");
+            }
+            System.out.println();
+        }
+    }
 }
