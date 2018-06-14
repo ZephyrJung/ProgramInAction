@@ -31,15 +31,32 @@ public class P617_MergeTwoBinaryTrees {
             t1 = t1.left;
             t2 = t2.left;
         }
+        return null;
     }
 
-    public Integer recurseTree(List<Integer> array, TreeNode t) {
-        if (t == null) {
-            return null;
+    public Integer recurseTree(TreeNode t, TreeNode t1, TreeNode t2) {
+        if(t1==null || t2==null) {
+            if (t1 != null) {
+                t.val = t1.val;
+                if (t1.left != null) {
+                    t.left = t1.left;
+                }
+                if (t1.right != null) {
+                    t.right = t1.right;
+                }
+            }
+            if (t2 != null) {
+                t.val = t2.val;
+                if (t2.left != null) {
+                    t.left = t2.left;
+                }
+                if (t2.right != null) {
+                    t.right = t2.right;
+                }
+            }
         }
-        array.add(t.val);
-        if (t.left != null) {
-            recurseTree(array, t.left);
-        }
+        t.val = t1.val + t2.val;
+//        recurseTree()
+        return null;
     }
 }
