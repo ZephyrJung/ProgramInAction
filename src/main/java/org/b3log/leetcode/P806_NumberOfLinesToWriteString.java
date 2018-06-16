@@ -22,7 +22,7 @@ public class P806_NumberOfLinesToWriteString {
         int lines = 1;
         for (char c : S.toCharArray()) {
             length += widths[c - 'a'];
-            if (length > 100 * lines && length % 100 != 0) {
+            if (length > 100) {
                 lines++;
                 length = (lines - 1) * 100 + widths[c - 'a'];
             }

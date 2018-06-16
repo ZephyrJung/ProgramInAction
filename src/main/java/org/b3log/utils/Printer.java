@@ -21,4 +21,8 @@ public class Printer {
             System.out.println();
         }
     }
+
+    public static void printArray(int[] array){
+
+    }
 }
