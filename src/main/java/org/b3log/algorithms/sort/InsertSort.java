@@ -1,0 +1,9 @@
+package org.b3log.algorithms.sort;
+
+/**
+ * @author : yu.zhang
+ * Date : 2018/6/20 上午10:24
+ * Email : yu.zhang@7fresh.com
+ **/
+public class InsertSort {
+}
