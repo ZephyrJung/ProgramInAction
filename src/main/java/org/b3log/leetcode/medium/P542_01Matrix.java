@@ -12,6 +12,7 @@ public class P542_01Matrix {
 
             }
         }
+        return null;
     }
 
     public static void main(String[] args) {
