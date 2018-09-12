@@ -1,4 +1,4 @@
-package org.b3log.disruptor;
+package org.b3log.github.disruptor;
 
 import com.lmax.disruptor.EventFactory;
 

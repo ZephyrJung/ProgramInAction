@@ -1,11 +1,9 @@
-package org.b3log.disruptor;
+package org.b3log.github.disruptor;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.lmax.disruptor.RingBuffer;
 import com.lmax.disruptor.dsl.Disruptor;
 
 import java.nio.ByteBuffer;
-import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadFactory;
 
