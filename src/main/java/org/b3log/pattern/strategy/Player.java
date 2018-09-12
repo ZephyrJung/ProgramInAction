@@ -12,8 +12,8 @@ public class Player {
     public static void main(String[] args) {
         HeroFactory heroFactory = new HeroFactory();
 //        Hero hero = heroFactory.getHero(HeroEnum.CIKE);
-        Hero hero = heroFactory.getHero(HeroEnum.SHESHOU);
-//        Hero hero = heroFactory.getHero(HeroEnum.FASHI);
+//        Hero hero = heroFactory.getHero(HeroEnum.SHESHOU);
+        Hero hero = heroFactory.getHero(HeroEnum.FASHI);
         hero.speak();
         hero.attack();
         hero.finalSkill();

@@ -13,7 +13,7 @@ public class ZhuGeLiang implements Hero {
     @Override
     public void attack() {
         count = 0;
-        System.out.println("甩出小水晶！");
+        System.out.println("小水晶biu！");
     }
 
     /**
