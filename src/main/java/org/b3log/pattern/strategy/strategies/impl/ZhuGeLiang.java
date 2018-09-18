@@ -50,6 +50,6 @@ public class ZhuGeLiang implements Hero {
 
     @Override
     public void speak() {
-        System.out.println("诸葛亮: \"弱智会传染~\"");
+        System.out.println("诸葛亮: \"弱智会传染~离我远点！\"");
     }
 }
