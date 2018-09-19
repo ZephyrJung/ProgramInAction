@@ -6,6 +6,7 @@ import org.b3log.pattern.observer.domain.HeadIconSystem;
 import org.b3log.pattern.observer.domain.NoticeSystem;
 import org.b3log.pattern.strategy.Player;
 import org.b3log.pattern.strategy.strategies.HeroEnum;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -14,6 +15,7 @@ import java.util.List;
  * Date : 2018/9/17 下午8:10
  * Email : yu.zhang@7fresh.com
  **/
+@Service
 public class NormalBattleGround implements IBattleGround {
     private BattleHelper helper = new BattleHelper();
 
@@ -26,13 +28,13 @@ public class NormalBattleGround implements IBattleGround {
     }
 
     public static void main(String[] args) {
-        NormalBattleGround ground = new NormalBattleGround();
-        Player libai = new Player("李白", HeroEnum.CIKE);
-        Player luban = new Player("鲁班", HeroEnum.SHESHOU);
-        Player zhugeliang = new Player("诸葛亮", HeroEnum.FASHI);
-        ground.init(Lists.newArrayList(libai, luban, zhugeliang));
-        ground.killPlayer(libai, luban);
-        ground.finish();
+//        NormalBattleGround ground = new NormalBattleGround();
+//        Player libai = new Player("李白", HeroEnum.CIKE);
+//        Player luban = new Player("鲁班", HeroEnum.SHESHOU);
+//        Player zhugeliang = new Player("诸葛亮", HeroEnum.FASHI);
+//        ground.init(Lists.newArrayList(libai, luban, zhugeliang));
+//        ground.killPlayer(libai, luban);
+//        ground.finish();
     }
 
     @Override

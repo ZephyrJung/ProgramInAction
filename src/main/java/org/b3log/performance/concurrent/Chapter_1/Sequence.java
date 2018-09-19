@@ -1,4 +1,4 @@
-package org.b3log.concurrent.Chapter_1;
+package org.b3log.performance.concurrent.Chapter_1;
 
 /**
  * @author : yu.zhang

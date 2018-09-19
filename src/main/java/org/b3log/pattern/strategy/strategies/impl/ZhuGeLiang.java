@@ -1,12 +1,14 @@
 package org.b3log.pattern.strategy.strategies.impl;
 
 import org.b3log.pattern.strategy.strategies.Hero;
+import org.springframework.stereotype.Service;
 
 /**
  * @author : yu.zhang
  * Date : 2018/9/12 下午4:19
  * Email : yu.zhang@7fresh.com
  **/
+@Service
 public class ZhuGeLiang implements Hero {
     private int count = 0;
 

@@ -2,6 +2,7 @@ package org.b3log.pattern.observer;
 
 import lombok.Data;
 import org.b3log.pattern.strategy.Player;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Observable;
@@ -11,6 +12,7 @@ import java.util.Observable;
  * Date : 2018/9/17 下午8:23
  * Email : yu.zhang@7fresh.com
  **/
+@Component
 public class BattleHelper extends Observable {
     public void initNotify(List<Player> playerList) {
         setChanged();

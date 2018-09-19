@@ -1,6 +1,7 @@
 package org.b3log.pattern.observer.domain;
 
 import org.b3log.pattern.observer.BattleHelper;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +13,7 @@ import java.util.Observer;
  * Date : 2018/9/17 下午8:21
  * Email : yu.zhang@7fresh.com
  **/
+@Service
 public class HeadIconSystem implements Observer {
     Map<String, Boolean> showHead;
 

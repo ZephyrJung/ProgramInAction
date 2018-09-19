@@ -1,4 +1,4 @@
-package org.b3log.github.disruptor;
+package org.b3log.performance.disruptor;
 
 import com.lmax.disruptor.EventHandler;
 

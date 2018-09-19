@@ -1,6 +1,7 @@
 package org.b3log.pattern.observer.domain;
 
 import org.b3log.pattern.observer.BattleHelper;
+import org.springframework.stereotype.Service;
 
 import java.util.Observable;
 import java.util.Observer;
@@ -10,6 +11,7 @@ import java.util.Observer;
  * Date : 2018/9/17 下午8:20
  * Email : yu.zhang@7fresh.com
  **/
+@Service
 public class NoticeSystem implements Observer {
     @Override
     public void update(Observable o, Object arg) {
@@ -22,15 +24,15 @@ public class NoticeSystem implements Observer {
         }
     }
 
-    private void initNotice(){
+    private void initNotice() {
         System.out.println("欢迎来到王者荣耀");
     }
 
-    private void killNotice(BattleHelper.KillParam param){
-        System.out.println(param.getWinner().getId()+"【击杀】"+param.getLoser().getId());
+    private void killNotice(BattleHelper.KillParam param) {
+        System.out.println(param.getWinner().getId() + "【击杀】" + param.getLoser().getId());
     }
 
-    private void finishNotice(){
+    private void finishNotice() {
         System.out.println("Game Over！");
     }
 }

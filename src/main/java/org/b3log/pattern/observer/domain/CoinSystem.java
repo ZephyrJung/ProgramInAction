@@ -1,6 +1,7 @@
 package org.b3log.pattern.observer.domain;
 
 import org.b3log.pattern.observer.BattleHelper;
+import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,6 +13,7 @@ import java.util.Observer;
  * Date : 2018/9/17 下午8:20
  * Email : yu.zhang@7fresh.com
  **/
+@Service
 public class CoinSystem implements Observer {
     public static final int KILL_WIN = 10;
     public static final int KILL_LOSE = -5;
