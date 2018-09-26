@@ -31,7 +31,7 @@ public class RuntimeDataArea {
      * 所有线程共享
      * 存放对象实例
      */
-    private JavaHeap heap;
+    private JavaHeap javaHeap;
 
     /**
      * 程序计数器 线程私有

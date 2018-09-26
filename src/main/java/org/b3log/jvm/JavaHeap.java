@@ -29,4 +29,20 @@ public class JavaHeap {
     private Set<String> fromSurvivor;
 
     private Set<String> toSurvivor;
+
+    public void assignMemory(JavaObject javaObject){
+        objects.put(javaObject.getClass().getName(),javaObject);
+    }
+
+    public void initMemory(JavaObject javaObject){
+
+    }
+
+    public void bumpThePointer(){
+        // 指针碰撞内存分配
+    }
+
+    public void freeList(){
+        // 空闲列表内存分配
+    }
 }

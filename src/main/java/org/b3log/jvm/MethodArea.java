@@ -36,4 +36,11 @@ public class MethodArea {
      * 运行时常量池
      */
     private Map<String, String> runtimeConstantPool;
+
+    public boolean checkExists(String clazz) {
+        return classInfo.contains(clazz)
+                || constantsInfo.contains(clazz)
+                || staticConstantsInfo.contains(clazz)
+                || runtimeConstantPool.containsKey(clazz);
+    }
 }

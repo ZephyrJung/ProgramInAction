@@ -9,7 +9,7 @@ import java.util.Map;
  * @author : yu.zhang
  * Date : 2018/9/19 下午6:30
  * Email : yu.zhang@7fresh.com
- *
+ * <p>
  * 栈帧
  */
 @Data
@@ -22,7 +22,7 @@ public class StackFrame {
     /**
      * 操作数栈
      */
-    private Deque<Object> operators;
+    private Deque<Object> operands;
 
     /**
      * 动态链接
