@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
  * Email : yu.zhang@7fresh.com
  **/
 @Service
-public class LiBai implements Hero {
+public class LiBai extends Hero {
     private int count = 0;
     private boolean enable = false;
 
@@ -61,6 +61,6 @@ public class LiBai implements Hero {
 
     @Override
     public void speak() {
-        System.out.println("李白: \"大河之剑天上来~\"");
+        System.out.println(super.getName() + ": \"大河之剑天上来~\"");
     }
 }

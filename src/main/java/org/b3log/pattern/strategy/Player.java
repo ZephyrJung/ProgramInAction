@@ -1,7 +1,10 @@
 package org.b3log.pattern.strategy;
 
 import lombok.Data;
+import org.b3log.pattern.command.Command;
 import org.b3log.pattern.strategy.strategies.Hero;
+
+import java.util.List;
 
 /**
  * @author : yu.zhang
@@ -16,5 +19,9 @@ public class Player {
 
     public void addMoney(int money) {
         this.money = this.money + money;
+    }
+
+    public void play(List<Command> commands){
+        commands.forEach(Command::execute);
     }
 }

@@ -1,39 +1,43 @@
 package org.b3log.pattern.strategy.strategies;
 
+import lombok.Data;
+
 /**
  * @author : yu.zhang
- * Date : 2018/9/12 下午4:14
+ * Date : 2018/10/1 下午3:04
  * Email : yu.zhang@7fresh.com
  **/
-public interface Hero {
+@Data
+public abstract class Hero {
+    private String name;
+
     /**
      * 普通攻击
      */
-    void attack();
+    public abstract void attack();
 
     /**
      * 被动
      */
-    void passiveSkill();
+    public abstract void passiveSkill();
 
     /**
      * 一技能
      */
-    void firstSkill();
+    public abstract void firstSkill();
 
     /**
      * 二技能
      */
-    void secondSkill();
+    public abstract void secondSkill();
 
     /**
      * 大招
      */
-    void finalSkill();
+    public abstract void finalSkill();
 
     /**
      * 说台词
      */
-    void speak();
-
+    public abstract void speak();
 }

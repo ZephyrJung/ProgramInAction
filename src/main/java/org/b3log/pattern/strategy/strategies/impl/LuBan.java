@@ -9,14 +9,15 @@ import org.springframework.stereotype.Service;
  * Email : yu.zhang@7fresh.com
  **/
 @Service
-public class LuBan implements Hero {
+public class LuBan extends Hero {
     private boolean shoot = false;
+
     @Override
     public void attack() {
-        if(shoot){
+        if (shoot) {
             System.out.println("biubiubiubiubiubiu！");
             this.shoot = false;
-        }else{
+        } else {
             System.out.println("biu!");
         }
     }
@@ -49,6 +50,6 @@ public class LuBan implements Hero {
 
     @Override
     public void speak() {
-        System.out.println("鲁班：\"鲁班大师，智商二百五\"");
+        System.out.println(super.getName() + "：\"鲁班大师，智商二百五\"");
     }
 }

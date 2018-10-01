@@ -3,6 +3,7 @@ package org.b3log.pattern.command;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.b3log.pattern.command.model.AttackEnum;
+import org.b3log.pattern.strategy.strategies.Hero;
 
 /**
  * @author : yu.zhang
@@ -13,21 +14,22 @@ import org.b3log.pattern.command.model.AttackEnum;
 @AllArgsConstructor
 public class AttackCommand implements Command {
     private AttackEnum attackEnum;
+    private Hero hero;
 
     @Override
     public void execute() {
         switch (attackEnum) {
             case NORMAL_ATTACK:
-                System.out.println("普通攻击！");
+                hero.attack();
                 break;
             case FIRST_SKILL:
-                System.out.println("释放一技能！");
+                hero.firstSkill();
                 break;
             case SECOND_SKILL:
-                System.out.println("释放二技能！");
+                hero.secondSkill();
                 break;
             case FINAL_SKILL:
-                System.out.println("放大招了！");
+                hero.finalSkill();
                 break;
             default:
                 System.out.println("Command Error!");

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
  * Email : yu.zhang@7fresh.com
  **/
 @Service
-public class ZhuGeLiang implements Hero {
+public class ZhuGeLiang extends Hero {
     private int count = 0;
 
     @Override
@@ -52,6 +52,6 @@ public class ZhuGeLiang implements Hero {
 
     @Override
     public void speak() {
-        System.out.println("诸葛亮: \"弱智会传染~离我远点！\"");
+        System.out.println(super.getName() + ": \"弱智会传染~离我远点！\"");
     }
 }
