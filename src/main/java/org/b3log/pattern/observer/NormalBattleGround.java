@@ -1,11 +1,9 @@
 package org.b3log.pattern.observer;
 
-import com.google.common.collect.Lists;
-import org.b3log.pattern.observer.domain.CoinSystem;
-import org.b3log.pattern.observer.domain.HeadIconSystem;
-import org.b3log.pattern.observer.domain.NoticeSystem;
+import org.b3log.pattern.observer.listener.CoinSystem;
+import org.b3log.pattern.observer.listener.HeadIconSystem;
+import org.b3log.pattern.observer.listener.NoticeSystem;
 import org.b3log.pattern.strategy.Player;
-import org.b3log.pattern.strategy.strategies.HeroEnum;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

@@ -1,4 +1,4 @@
-package org.b3log.pattern.observer.domain;
+package org.b3log.pattern.observer.listener;
 
 import org.b3log.pattern.observer.BattleHelper;
 import org.springframework.stereotype.Service;
