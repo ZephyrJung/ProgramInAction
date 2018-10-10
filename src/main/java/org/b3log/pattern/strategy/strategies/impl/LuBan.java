@@ -50,6 +50,6 @@ public class LuBan extends Hero {
 
     @Override
     public void speak() {
-        System.out.println(super.getName() + "：\"鲁班大师，智商二百五\"");
+        System.out.println("鲁班：\"鲁班大师，智商二百五\"");
     }
 }

@@ -1,8 +1,10 @@
 package org.b3log.pattern.observer;
 
+import org.b3log.pattern.command.Command;
 import org.b3log.pattern.strategy.Player;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author : yu.zhang
@@ -11,6 +13,8 @@ import java.util.List;
  **/
 public interface IBattleGround {
     void init(List<Player> playerList);
+
+    void playing(List<Command> commands);
 
     void killPlayer(Player winner, Player loser);
 

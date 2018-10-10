@@ -3,6 +3,8 @@ package org.b3log.pattern.command;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.b3log.pattern.command.model.AttackEnum;
+import org.b3log.pattern.proxy.HeroProxy;
+import org.b3log.pattern.strategy.Player;
 import org.b3log.pattern.strategy.strategies.Hero;
 
 /**
@@ -14,10 +16,11 @@ import org.b3log.pattern.strategy.strategies.Hero;
 @AllArgsConstructor
 public class AttackCommand implements Command {
     private AttackEnum attackEnum;
-    private Hero hero;
+    private Player player;
 
     @Override
     public void execute() {
+        HeroProxy hero = player.getHeroProxy();
         switch (attackEnum) {
             case NORMAL_ATTACK:
                 hero.attack();
@@ -31,8 +34,16 @@ public class AttackCommand implements Command {
             case FINAL_SKILL:
                 hero.finalSkill();
                 break;
+            case GO_BACK_HOME:
+                hero.goBackHome();
+                break;
             default:
                 System.out.println("Command Error!");
         }
+    }
+
+    @Override
+    public Player getPlayer() {
+        return this.player;
     }
 }

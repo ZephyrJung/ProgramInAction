@@ -61,6 +61,6 @@ public class LiBai extends Hero {
 
     @Override
     public void speak() {
-        System.out.println(super.getName() + ": \"大河之剑天上来~\"");
+        System.out.println("李白: \"大河之剑天上来~\"");
     }
 }

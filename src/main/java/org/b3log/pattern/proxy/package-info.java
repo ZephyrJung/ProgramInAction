@@ -1,13 +1,8 @@
 /**
- * @author Zhang Yu
- * Date: 18年4月2日
- * Email: 2895205695@qq.com
- *
- * 这个模型是一个火车票购买的模型
- * 用户在网上购票，对于自己而言关注点是始发站，终点站，开车时间(Path)
- * 购票网站是一个代理系统(TicketCenter)，它承接用户请求，去内接的各个车站(TicketSellerHall)找到对应的车站系统(TicketSeller)检查是否有票，然后出票（Ticket），再交给用户
- * 用户则持车票去车站乘车(Train)
- *
- * 
- */
+ * @author : yu.zhang
+ * Date : 2018/10/10 上午11:13
+ * Email : yu.zhang@7fresh.com
+ * 为对象添加一个代理器，代理器和对象实现了相同的接口，但是代理中可以对对象进行一些额外的操作
+ * 例如，本来是操作英雄类，添加英雄操作代理类，可以为英雄添加附加的公共技能
+ **/
 package org.b3log.pattern.proxy;

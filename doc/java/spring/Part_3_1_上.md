@@ -1180,12 +1180,12 @@ JSR-330变体称为Provider，与`Provider<MyTargetBean>`一起使用声明和�
  http://www.springframework.org/schema/beans/spring-beans.xsd
  http://www.springframework.org/schema/aop
  http://www.springframework.org/schema/aop/spring-aop.xsd">
- <!-- an HTTP Session-scoped bean exposed as a proxy -->
+ ingopay
     <bean id="userPreferences" class="com.foo.UserPreferences" scope="session">
-        <!-- instructs the container to proxy the surrounding bean -->
+        ingopay
         <aop:scoped-proxy/>
     </bean>
-    <!-- a singleton-scoped bean injected with a proxy to the above bean -->
+    ingopay
     <bean id="userService" class="com.foo.SimpleUserService">
         <!-- a reference to the proxied userPreferences bean -->
         <property name="userPreferences" ref="userPreferences"/>

@@ -9,5 +9,6 @@ public enum AttackEnum {
     NORMAL_ATTACK,
     FIRST_SKILL,
     SECOND_SKILL,
-    FINAL_SKILL
+    FINAL_SKILL,
+    GO_BACK_HOME
 }

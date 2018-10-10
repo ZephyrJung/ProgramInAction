@@ -21,7 +21,7 @@ public class TestUtils {
         for (int i = 0; i < size; i++) {
             Player player = players.get(i);
             player.setId("Player-" + (i + 1));
-            player.setHero(HeroEnum.randomHero().getHero());
+            player.setHeroProxy(HeroEnum.randomHero().getHero());
             player.setMoney(random.nextInt(100) + 1);
         }
 

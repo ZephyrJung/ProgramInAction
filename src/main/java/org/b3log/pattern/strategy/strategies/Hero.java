@@ -9,8 +9,6 @@ import lombok.Data;
  **/
 @Data
 public abstract class Hero {
-    private String name;
-
     /**
      * 普通攻击
      */

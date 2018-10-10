@@ -1,5 +1,6 @@
 package org.b3log.pattern.observer;
 
+import org.b3log.pattern.command.Command;
 import org.b3log.pattern.observer.listener.CoinSystem;
 import org.b3log.pattern.observer.listener.HeadIconSystem;
 import org.b3log.pattern.observer.listener.NoticeSystem;
@@ -15,6 +16,8 @@ import java.util.List;
  **/
 @Service
 public class NormalBattleGround implements IBattleGround {
+
+
     private BattleHelper helper = new BattleHelper();
 
     @Override
@@ -25,14 +28,9 @@ public class NormalBattleGround implements IBattleGround {
         helper.initNotify(playerList);
     }
 
-    public static void main(String[] args) {
-//        NormalBattleGround ground = new NormalBattleGround();
-//        Player libai = new Player("李白", HeroEnum.CIKE);
-//        Player luban = new Player("鲁班", HeroEnum.SHESHOU);
-//        Player zhugeliang = new Player("诸葛亮", HeroEnum.FASHI);
-//        ground.init(Lists.newArrayList(libai, luban, zhugeliang));
-//        ground.killPlayer(libai, luban);
-//        ground.finish();
+    @Override
+    public void playing(List<Command> commands) {
+        commands.forEach(command -> command.getPlayer().play(command));
     }
 
     @Override

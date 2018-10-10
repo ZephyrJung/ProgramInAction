@@ -52,6 +52,6 @@ public class ZhuGeLiang extends Hero {
 
     @Override
     public void speak() {
-        System.out.println(super.getName() + ": \"弱智会传染~离我远点！\"");
+        System.out.println("诸葛亮: \"弱智会传染~离我远点！\"");
     }
 }
