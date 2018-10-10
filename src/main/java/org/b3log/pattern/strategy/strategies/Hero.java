@@ -1,6 +1,7 @@
 package org.b3log.pattern.strategy.strategies;
 
 import lombok.Data;
+import org.b3log.pattern.state.Attack;
 
 /**
  * @author : yu.zhang
@@ -9,6 +10,10 @@ import lombok.Data;
  **/
 @Data
 public abstract class Hero {
+    protected Attack attack;
+
+    public abstract void init();
+
     /**
      * 普通攻击
      */

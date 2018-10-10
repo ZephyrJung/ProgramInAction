@@ -1,5 +1,6 @@
 package org.b3log.pattern.strategy.strategies.impl;
 
+import org.b3log.pattern.state.Attack;
 import org.b3log.pattern.strategy.strategies.Hero;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +14,16 @@ public class ZhuGeLiang extends Hero {
     private int count = 0;
 
     @Override
+    public void init() {
+        attack = new Attack();
+        attack.setBaseHarm(10);
+        attack.setExtraHarm(5);
+    }
+
+    @Override
     public void attack() {
         count = 0;
-        System.out.println("小水晶biu！");
+        System.out.println("小水晶biu！" + " -" + attack.getAttackHarm());
     }
 
     /**

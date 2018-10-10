@@ -1,5 +1,6 @@
 package org.b3log.pattern.strategy.strategies.impl;
 
+import org.b3log.pattern.state.Attack;
 import org.b3log.pattern.strategy.strategies.Hero;
 import org.springframework.stereotype.Service;
 
@@ -13,12 +14,19 @@ public class LuBan extends Hero {
     private boolean shoot = false;
 
     @Override
+    public void init() {
+        attack = new Attack();
+        attack.setBaseHarm(50);
+        attack.setExtraHarm(200);
+    }
+
+    @Override
     public void attack() {
         if (shoot) {
-            System.out.println("biubiubiubiubiubiu！");
+            System.out.println("biubiubiubiubiubiu！" + " -" + attack.getAttackHarm());
             this.shoot = false;
         } else {
-            System.out.println("biu!");
+            System.out.println("biu!" + " -" + attack.getAttackHarm());
         }
     }
 

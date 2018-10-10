@@ -12,8 +12,13 @@ import org.b3log.pattern.strategy.strategies.Hero;
 public class HeroProxy extends Hero {
     private Hero hero;
 
-    public void goBackHome(){
+    public void goBackHome() {
         System.out.println("三十六计走为上计~");
+    }
+
+    @Override
+    public void init() {
+        hero.init();
     }
 
     @Override

@@ -1,5 +1,6 @@
 package org.b3log.pattern.strategy.strategies.impl;
 
+import org.b3log.pattern.state.Attack;
 import org.b3log.pattern.strategy.strategies.Hero;
 import org.springframework.stereotype.Service;
 
@@ -14,16 +15,23 @@ public class LiBai extends Hero {
     private boolean enable = false;
 
     @Override
+    public void init() {
+        attack = new Attack();
+        attack.setBaseHarm(100);
+        attack.setExtraHarm(100);
+    }
+
+    @Override
     public void attack() {
         count++;
         if (count % 3 == 0) {
-            System.out.println("刺！");
+            System.out.println("刺！" + " -" + attack.getAttackHarm());
         }
         if (count % 3 == 1) {
-            System.out.println("劈！");
+            System.out.println("劈！" + " -" + attack.getAttackHarm());
         }
         if (count % 3 == 2) {
-            System.out.println("扫！");
+            System.out.println("扫！" + " -" + attack.getAttackHarm());
         }
         passiveSkill();
     }

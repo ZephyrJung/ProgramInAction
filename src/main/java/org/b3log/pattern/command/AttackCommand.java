@@ -5,7 +5,6 @@ import lombok.NoArgsConstructor;
 import org.b3log.pattern.command.model.AttackEnum;
 import org.b3log.pattern.proxy.HeroProxy;
 import org.b3log.pattern.strategy.Player;
-import org.b3log.pattern.strategy.strategies.Hero;
 
 /**
  * @author : yu.zhang
@@ -21,6 +20,7 @@ public class AttackCommand implements Command {
     @Override
     public void execute() {
         HeroProxy hero = player.getHeroProxy();
+        hero.init();
         switch (attackEnum) {
             case NORMAL_ATTACK:
                 hero.attack();
