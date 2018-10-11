@@ -8,7 +8,7 @@ import org.b3log.pattern.command.model.AttackEnum;
 import org.b3log.pattern.command.model.MoveEnum;
 import org.b3log.pattern.observer.NormalBattleGround;
 import org.b3log.pattern.strategy.HeroFactory;
-import org.b3log.pattern.strategy.Player;
+import org.b3log.pattern.proxy.Player;
 import org.b3log.pattern.strategy.strategies.HeroEnum;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
@@ -36,8 +36,8 @@ public class Application {
 
         battleGround.init(Lists.newArrayList(player1, player2));
 
-        player1.getHeroProxy().speak();
-        player2.getHeroProxy().speak();
+        player1.getSelectedHero().speak();
+        player2.getSelectedHero().speak();
         List<Command> commandList = Lists.newArrayList(
                 new AttackCommand(AttackEnum.NORMAL_ATTACK, player1),
                 new AttackCommand(AttackEnum.FINAL_SKILL, player1),
@@ -70,13 +70,9 @@ public class Application {
 
     public static Player initPlayer(ApplicationContext context, HeroEnum heroEnum) {
         HeroFactory heroFactory = context.getBean(HeroFactory.class);
-        Player player = new Player();
-        player.setId("test");
-        player.setName(heroEnum.name());
-        player.setHeroProxy(heroFactory.getHero(heroEnum));
+        return new Player("test", heroEnum.name(), heroFactory.getHero(heroEnum));
 //        player.setHero(heroFactory.getHero(HeroEnum.CIKE));
 //        player.setHero(heroFactory.getHero(HeroEnum.SHESHOU));
-        return player;
     }
 
 

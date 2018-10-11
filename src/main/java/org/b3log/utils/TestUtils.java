@@ -1,6 +1,7 @@
 package org.b3log.utils;
 
-import org.b3log.pattern.strategy.Player;
+import org.b3log.pattern.decorator.SelectedHero;
+import org.b3log.pattern.proxy.Player;
 import org.b3log.pattern.strategy.strategies.HeroEnum;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public class TestUtils {
         for (int i = 0; i < size; i++) {
             Player player = players.get(i);
             player.setId("Player-" + (i + 1));
-            player.setHeroProxy(HeroEnum.randomHero().getHero());
+            player.setSelectedHero(new SelectedHero(HeroEnum.randomHero().getHero()));
             player.setMoney(random.nextInt(100) + 1);
         }
 

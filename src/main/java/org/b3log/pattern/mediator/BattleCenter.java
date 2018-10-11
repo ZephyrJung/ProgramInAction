@@ -1,6 +1,6 @@
 package org.b3log.pattern.mediator;
 
-import org.b3log.pattern.strategy.Player;
+import org.b3log.pattern.proxy.Player;
 
 /**
  * @author : yu.zhang

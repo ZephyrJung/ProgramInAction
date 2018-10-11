@@ -1,4 +1,4 @@
-package org.b3log.pattern.proxy;
+package org.b3log.pattern.decorator;
 
 import lombok.Data;
 import org.b3log.pattern.strategy.strategies.Hero;
@@ -9,8 +9,15 @@ import org.b3log.pattern.strategy.strategies.Hero;
  * Email : yu.zhang@7fresh.com
  **/
 @Data
-public class HeroProxy extends Hero {
+public class SelectedHero extends Hero {
     private Hero hero;
+
+    public SelectedHero() {
+    }
+
+    public SelectedHero(Hero hero) {
+        this.hero = hero;
+    }
 
     public void goBackHome() {
         System.out.println("三十六计走为上计~");

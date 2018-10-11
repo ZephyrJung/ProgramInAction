@@ -1,12 +1,10 @@
 package org.b3log.java;
 
-import org.b3log.pattern.strategy.Player;
-import org.b3log.pattern.strategy.strategies.Hero;
+import org.b3log.pattern.proxy.Player;
 import org.b3log.utils.Printer;
 import org.b3log.utils.TestUtils;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;

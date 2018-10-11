@@ -4,7 +4,7 @@ import org.b3log.pattern.command.Command;
 import org.b3log.pattern.observer.listener.CoinSystem;
 import org.b3log.pattern.observer.listener.HeadIconSystem;
 import org.b3log.pattern.observer.listener.NoticeSystem;
-import org.b3log.pattern.strategy.Player;
+import org.b3log.pattern.proxy.Player;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -30,7 +30,7 @@ public class NormalBattleGround implements IBattleGround {
 
     @Override
     public void playing(List<Command> commands) {
-        commands.forEach(command -> command.getPlayer().play(command));
+        commands.forEach(Command::execute);
     }
 
     @Override

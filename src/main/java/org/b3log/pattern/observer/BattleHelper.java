@@ -1,7 +1,7 @@
 package org.b3log.pattern.observer;
 
 import lombok.Data;
-import org.b3log.pattern.strategy.Player;
+import org.b3log.pattern.proxy.Player;
 import org.springframework.stereotype.Component;
 
 import java.util.List;

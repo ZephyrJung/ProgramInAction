@@ -1,10 +1,9 @@
 package org.b3log.pattern.observer;
 
 import org.b3log.pattern.command.Command;
-import org.b3log.pattern.strategy.Player;
+import org.b3log.pattern.proxy.Player;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author : yu.zhang
