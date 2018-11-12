@@ -8,6 +8,9 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
+import javax.validation.Validation;
+import javax.validation.ValidatorFactory;
+
 
 /**
  * @author Zhang Yu
@@ -20,12 +23,15 @@ public class Application {
     public static void main(String[] args) {
         ApplicationContext context =
                 new AnnotationConfigApplicationContext(Application.class);
-        PersonForm personForm = new PersonForm();
-        personForm.setAge(1);
-        personForm.setName("Zephyr");
-        MyService service = context.getBean(MyService.class);
-        LocalValidatorFactoryBean validator = context.getBean(LocalValidatorFactoryBean.class);
-        service.validate(personForm, validator);
+        validate(context);
     }
 
+    public static void validate(ApplicationContext context) {
+        PersonForm personForm = new PersonForm();
+        personForm.setAge(-1);
+        personForm.setName("Zephyr");
+        MyService service = context.getBean(MyService.class);
+        ValidatorFactory validatorFactory = Validation.buildDefaultValidatorFactory();
+        service.hiberValidate(personForm,validatorFactory.getValidator());
+    }
 }

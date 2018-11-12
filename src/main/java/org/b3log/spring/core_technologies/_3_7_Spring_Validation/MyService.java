@@ -4,6 +4,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.Validator;
 
+import javax.validation.ConstraintViolation;
+import java.util.Set;
+
 /**
  * @author : yu.zhang
  * Date : 2018/10/9 下午2:46
@@ -17,5 +20,10 @@ public class MyService {
         binder.setValidator(validator);
         binder.validate();
         System.out.println(binder.getBindingResult());
+    }
+
+    public void hiberValidate(PersonForm personForm, javax.validation.Validator validator){
+        Set<ConstraintViolation<PersonForm>> result =  validator.validate(personForm);
+        result.forEach(r-> System.out.println(r.getMessage()));
     }
 }
