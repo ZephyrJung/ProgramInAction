@@ -1,4 +1,4 @@
-package org.b3log.spring;
+package org.b3log.spring.core_technologies;
 
 import org.b3log.spring.core_technologies._3_7_Spring_Validation.MyService;
 import org.b3log.spring.core_technologies._3_7_Spring_Validation.PersonForm;
@@ -6,7 +6,6 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.validation.beanvalidation.LocalValidatorFactoryBean;
 
 import javax.validation.Validation;
 import javax.validation.ValidatorFactory;

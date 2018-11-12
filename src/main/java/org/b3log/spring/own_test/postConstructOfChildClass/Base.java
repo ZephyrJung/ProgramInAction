@@ -1,4 +1,4 @@
-package org.b3log.spring;
+package org.b3log.spring.own_test.postConstructOfChildClass;
 
 import javax.annotation.PostConstruct;
 
