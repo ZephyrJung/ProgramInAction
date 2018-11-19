@@ -1,5 +1,6 @@
 package org.b3log.spring.own_test;
 
+import org.b3log.spring.own_test.postConstructOfChildClass.Zephyr;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
@@ -22,5 +23,8 @@ public class Application {
                 new AnnotationConfigApplicationContext(Application.class);
         Map<String, Object> beanmap = context.getBeansWithAnnotation(Component.class);
         beanmap.keySet().forEach(System.out::println);
+        System.out.println("---------");
+        Map<String, Object> zephyr = context.getBeansWithAnnotation(Zephyr.class);
+        zephyr.keySet().forEach(System.out::println);
     }
 }
