@@ -7,7 +7,7 @@ import java.util.Map;
 /**
  * @author : yu.zhang
  * Date : 2018/9/26 下午3:00
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 @Data
 public class JavaObject {

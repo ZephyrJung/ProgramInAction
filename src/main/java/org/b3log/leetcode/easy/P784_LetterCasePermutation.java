@@ -8,7 +8,7 @@ import java.util.Set;
 /**
  * @author : yu.zhang
  * Date : 2018/6/22 上午9:10
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class P784_LetterCasePermutation {
 

@@ -5,7 +5,7 @@ import org.b3log.utils.Printer;
 /**
  * @author : yu.zhang
  * Date : 2018/6/14 上午8:43
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class P832_FlippingAnImage {
     public static int[][] flipAndInvertImage(int[][] A) {

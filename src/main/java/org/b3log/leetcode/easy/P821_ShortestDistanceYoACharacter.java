@@ -8,7 +8,7 @@ import java.util.stream.Collectors;
 /**
  * @author : yu.zhang
  * Date : 2018/6/16 上午10:22
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class P821_ShortestDistanceYoACharacter {
     public static void main(String[] args) {

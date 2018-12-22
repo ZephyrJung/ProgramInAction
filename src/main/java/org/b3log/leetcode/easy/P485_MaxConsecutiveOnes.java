@@ -3,7 +3,7 @@ package org.b3log.leetcode.easy;
 /**
  * @author : yu.zhang
  * Date : 2018/6/21 上午8:56
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class P485_MaxConsecutiveOnes {
     public static int findMaxConsecutiveOnes(int[] nums) {

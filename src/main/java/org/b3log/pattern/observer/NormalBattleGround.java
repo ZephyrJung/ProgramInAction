@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * @author : yu.zhang
  * Date : 2018/9/17 下午8:10
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 @Service
 public class NormalBattleGround implements IBattleGround {

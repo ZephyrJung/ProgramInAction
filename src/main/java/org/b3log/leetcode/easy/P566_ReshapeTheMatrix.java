@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * @author : yu.zhang
  * Date : 2018/6/16 下午6:23
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class P566_ReshapeTheMatrix {
     public static int[][] matrixReshape(int[][] nums, int r, int c) {

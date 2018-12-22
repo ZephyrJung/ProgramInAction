@@ -5,7 +5,7 @@ import org.b3log.pattern.proxy.Player;
 /**
  * @author : yu.zhang
  * Date : 2018/10/16 下午5:19
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public interface Game {
     void login(Player player);

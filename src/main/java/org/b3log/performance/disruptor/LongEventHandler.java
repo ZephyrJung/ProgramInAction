@@ -5,7 +5,7 @@ import com.lmax.disruptor.EventHandler;
 /**
  * @author : yu.zhang
  * Date : 2018/4/25 下午2:58
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class LongEventHandler implements EventHandler<LongEvent> {
     public void onEvent(LongEvent event, long sequence, boolean endOfBatch)

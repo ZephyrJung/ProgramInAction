@@ -15,7 +15,7 @@ import static reactor.bus.selector.Selectors.$;
 /**
  * @author : yu.zhang
  * Date : 2018/6/11 下午5:13
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 @Configuration
 @EnableAutoConfiguration

@@ -9,7 +9,7 @@ import javax.validation.constraints.Size;
 /**
  * @author : yu.zhang
  * Date : 2018/10/9 下午2:44
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 @Data
 public class PersonForm {

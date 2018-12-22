@@ -3,7 +3,7 @@ package org.b3log.leetcode.easy;
 /**
  * @author : yu.zhang
  * Date : 2018/6/30 上午9:46
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class P796_RotateString {
     public static boolean rotateString(String A, String B) {

@@ -1,7 +1,7 @@
 /**
  * @author : yu.zhang
  * Date : 2018/10/15 下午6:38
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  * 适配器模式
  * patterns中，船长Captain只能接受RowingBoat接口的实现，而当前只有FishingBoat实现，为了适配，定义了FishingBoatAdapter，实现了RowingBoat接口，并在其中进行相关调用
  * 以我理解，适配器模式和代理模式的区别在于，代理模式是有计划的添加了中间层去控制要调用的对象，而适配器模式则是后补添加来适应要调用的对象的

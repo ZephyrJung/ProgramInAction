@@ -9,7 +9,7 @@ import io.netty.util.CharsetUtil;
 /**
  * @author : yu.zhang
  * Date : 2018/10/15 下午3:03
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class EchoClientHandler extends SimpleChannelInboundHandler<ByteBuf> {
     @Override

@@ -7,7 +7,7 @@ import java.util.Random;
 /**
  * @author : yu.zhang
  * Date : 2018/10/10 下午5:41
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 @Data
 public class Attack {

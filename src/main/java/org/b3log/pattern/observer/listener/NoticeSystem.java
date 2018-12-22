@@ -9,7 +9,7 @@ import java.util.Observer;
 /**
  * @author : yu.zhang
  * Date : 2018/9/17 下午8:20
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 @Service
 public class NoticeSystem implements Observer {

@@ -3,7 +3,7 @@ package org.b3log.algorithms.DecisitionTree;
 /**
  * @author : yu.zhang
  * Date : 2018/11/9 11:10 AM
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 import java.util.ArrayList;
 import java.util.HashMap;

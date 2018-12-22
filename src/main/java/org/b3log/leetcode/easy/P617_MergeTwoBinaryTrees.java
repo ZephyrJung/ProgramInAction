@@ -7,7 +7,7 @@ import java.util.Stack;
 /**
  * @author : yu.zhang
  * Date : 2018/6/14 上午9:08
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class P617_MergeTwoBinaryTrees {
 

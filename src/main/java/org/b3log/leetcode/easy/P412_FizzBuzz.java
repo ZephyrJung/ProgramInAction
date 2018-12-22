@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * @author : yu.zhang
  * Date : 2018/6/13 下午9:56
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class P412_FizzBuzz {
     public List<String> fizzBuzz(int n) {

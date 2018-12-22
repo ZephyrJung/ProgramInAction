@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 /**
  * @author : yu.zhang
  * Date : 2018/9/18 下午2:44
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class CollectorsTest {
     public static void main(String[] args) {

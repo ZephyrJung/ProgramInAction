@@ -7,7 +7,7 @@ import java.util.Deque;
 /**
  * @author : yu.zhang
  * Date : 2018/9/19 下午3:39
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 @Data
 public class RuntimeDataArea {

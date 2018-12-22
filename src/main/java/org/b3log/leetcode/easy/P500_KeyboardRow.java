@@ -3,7 +3,7 @@ package org.b3log.leetcode.easy;
 /**
  * @author : yu.zhang
  * Date : 2018/6/13 下午9:57
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class P500_KeyboardRow {
     public String[] findWords(String[] words) {

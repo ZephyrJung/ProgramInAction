@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 /**
  * @author : yu.zhang
  * Date : 2018/9/12 下午4:19
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 @Service
 public class LiBai extends Hero {

@@ -6,7 +6,7 @@ import java.util.stream.IntStream;
 /**
  * @author : yu.zhang
  * Date : 2018/6/17 下午5:32
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class P136_SingleNumber {
     // [10 ms]

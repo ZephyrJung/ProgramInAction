@@ -3,7 +3,7 @@ package org.b3log.leetcode.easy;
 /**
  * @author : yu.zhang
  * Date : 2018/6/19 下午2:28
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class P693_BinaryNumberWithAlternatingBits {
     public static boolean hasAlternatingBits(int n) {

@@ -3,7 +3,7 @@ package org.b3log.leetcode.easy;
 /**
  * @author : yu.zhang
  * Date : 2018/6/14 下午9:41
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class P806_NumberOfLinesToWriteString {
     public static void main(String[] args) {

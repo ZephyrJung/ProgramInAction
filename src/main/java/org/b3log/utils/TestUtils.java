@@ -11,7 +11,7 @@ import java.util.Random;
 /**
  * @author : yu.zhang
  * Date : 2018/9/18 下午2:51
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class TestUtils {
     public static List<Player> randomPlayers() {

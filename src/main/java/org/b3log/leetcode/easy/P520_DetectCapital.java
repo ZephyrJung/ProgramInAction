@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 /**
  * @author : yu.zhang
  * Date : 2018/6/27 上午9:27
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class P520_DetectCapital {
     //[49 ms]

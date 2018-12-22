@@ -8,7 +8,7 @@ import java.util.Map;
 /**
  * @author : yu.zhang
  * Date : 2018/7/5 上午8:47
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class P171_ExcelSheetColumnNumber {
     public static int titleToNumber(String s) {

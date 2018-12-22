@@ -6,7 +6,7 @@ import java.util.Set;
 /**
  * @author : yu.zhang
  * Date : 2018/6/13 下午9:42
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class P804_UniqueMorseCodeWords {
     public static  int uniqueMorseRepresentations(String[] words) {

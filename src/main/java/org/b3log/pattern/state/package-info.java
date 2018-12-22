@@ -1,7 +1,7 @@
 /**
  * @author : yu.zhang
  * Date : 2018/10/10 下午4:58
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  *
  * 状态模式
  * 对象的行为根据状态的不同而有所变化

@@ -10,7 +10,7 @@ import java.util.concurrent.ThreadFactory;
 /**
  * @author : yu.zhang
  * Date : 2018/4/25 下午3:02
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class LongEventMain {
     public static void handleEvent(LongEvent event, long sequence, boolean endOfBatch) {

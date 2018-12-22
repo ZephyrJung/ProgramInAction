@@ -7,7 +7,7 @@ import java.nio.ByteBuffer;
 /**
  * @author : yu.zhang
  * Date : 2018/4/25 下午2:59
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class LongEventProducer {
     private final RingBuffer<LongEvent> ringBuffer;

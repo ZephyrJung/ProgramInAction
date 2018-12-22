@@ -3,7 +3,7 @@ package org.b3log.algorithms.search;
 /**
  * @author : yu.zhang
  * Date : 2018/4/25 下午6:07
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class BinarySearch {
     public static void main(String[] args) {

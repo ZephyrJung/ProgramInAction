@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 /**
  * @author : yu.zhang
  * Date : 2018/6/11 下午5:09
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 @Service
 public class NotificationServiceimpl implements NotificationService {

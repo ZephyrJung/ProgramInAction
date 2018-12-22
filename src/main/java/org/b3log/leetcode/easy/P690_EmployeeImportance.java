@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * @author : yu.zhang
  * Date : 2018/6/27 下午5:18
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class P690_EmployeeImportance {
     public static int getImportance(List<Employee> employees, int id) {

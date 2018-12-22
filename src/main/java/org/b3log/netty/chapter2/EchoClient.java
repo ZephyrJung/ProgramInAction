@@ -13,7 +13,7 @@ import java.net.InetSocketAddress;
 /**
  * @author : yu.zhang
  * Date : 2018/10/15 下午3:06
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class EchoClient {
     private final String host;

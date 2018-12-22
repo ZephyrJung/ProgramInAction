@@ -7,7 +7,7 @@ import java.util.Objects;
 /**
  * @author : yu.zhang
  * Date : 2018/5/21 下午4:13
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class JavaString {
 

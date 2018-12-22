@@ -10,7 +10,7 @@ import java.util.Observable;
 /**
  * @author : yu.zhang
  * Date : 2018/9/17 下午8:23
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 @Component
 public class BattleHelper extends Observable {

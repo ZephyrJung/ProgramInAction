@@ -10,7 +10,7 @@ import org.b3log.pattern.strategy.strategies.Hero;
 /**
  * @author : yu.zhang
  * Date : 2018/9/12 下午4:32
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 @Data
 public class Player {

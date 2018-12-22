@@ -11,7 +11,7 @@ import java.util.Observer;
 /**
  * @author : yu.zhang
  * Date : 2018/9/17 下午8:21
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 @Service
 public class HeadIconSystem implements Observer {

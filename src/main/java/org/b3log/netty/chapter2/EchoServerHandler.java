@@ -10,7 +10,7 @@ import io.netty.util.CharsetUtil;
 /**
  * @author : yu.zhang
  * Date : 2018/10/15 下午2:40
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class EchoServerHandler extends ChannelInboundHandlerAdapter {
     @Override

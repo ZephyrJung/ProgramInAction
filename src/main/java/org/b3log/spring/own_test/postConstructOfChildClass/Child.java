@@ -10,7 +10,7 @@ import javax.annotation.PostConstruct;
  * 而抽象基类声明@PostConstruct没有意义，因为抽象类不会被实例化
  * @author : yu.zhang
  * Date : 2018/11/12 7:51 PM
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 @Component
 public class Child extends Base {

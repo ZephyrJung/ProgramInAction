@@ -9,7 +9,7 @@ import java.util.stream.Collectors;
 /**
  * @author : yu.zhang
  * Date : 2018/6/16 上午9:33
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class P811_SubdomainVisitCount {
     public static void main(String[] args) {

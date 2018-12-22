@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 /**
  * @author : yu.zhang
  * Date : 2018/9/12 下午4:27
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 @Component
 public class HeroFactory {

@@ -5,7 +5,7 @@ import java.util.Arrays;
 /**
  * @author : yu.zhang
  * Date : 2018/7/3 上午9:07
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class P717_1bitAnd2bitCharacters {
     public boolean isOneBitCharacter(int[] bits) {

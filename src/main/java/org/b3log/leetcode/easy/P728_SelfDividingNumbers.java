@@ -6,7 +6,7 @@ import java.util.List;
 /**
  * @author : yu.zhang
  * Date : 2018/6/14 下午9:22
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class P728_SelfDividingNumbers {
     public static void main(String[] args) {

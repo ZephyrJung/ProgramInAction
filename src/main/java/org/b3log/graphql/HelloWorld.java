@@ -14,7 +14,7 @@ import static graphql.schema.idl.RuntimeWiring.newRuntimeWiring;
 /**
  * @author : yu.zhang
  * Date : 2018/10/18 上午9:33
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class HelloWorld {
     public static void main(String[] args) {

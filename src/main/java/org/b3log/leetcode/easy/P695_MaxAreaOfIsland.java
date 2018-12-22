@@ -7,7 +7,7 @@ import java.util.Set;
 /**
  * @author : yu.zhang
  * Date : 2018/6/23 下午12:18
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class P695_MaxAreaOfIsland {
     public static int maxAreaOfIsland(int[][] grid) {

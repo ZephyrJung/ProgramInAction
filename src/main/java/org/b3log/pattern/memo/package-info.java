@@ -1,7 +1,7 @@
 /**
  * @author : yu.zhang
  * Date : 2018/10/29 下午4:01
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  *
  * 备忘录模式
  **/

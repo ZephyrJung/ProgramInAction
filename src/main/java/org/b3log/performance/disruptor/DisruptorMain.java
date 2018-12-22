@@ -13,7 +13,7 @@ import java.util.concurrent.ThreadFactory;
 /**
  * @author : yu.zhang
  * Date : 2018/4/25 下午3:49
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class DisruptorMain {
     public static void main(String[] args) throws Exception {

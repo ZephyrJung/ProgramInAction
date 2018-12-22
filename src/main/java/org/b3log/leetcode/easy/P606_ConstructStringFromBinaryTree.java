@@ -5,7 +5,7 @@ import org.b3log.leetcode.common.TreeNode;
 /**
  * @author : yu.zhang
  * Date : 2018/7/3 上午8:46
- * Email : yu.zhang@7fresh.com
+ * Email : zephyrjung@126.com
  **/
 public class P606_ConstructStringFromBinaryTree {
     public static String tree2str(TreeNode t) {
