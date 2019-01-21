@@ -8,8 +8,7 @@ import com.lmax.disruptor.EventHandler;
  * Email : zephyrjung@126.com
  **/
 public class LongEventHandler implements EventHandler<LongEvent> {
-    public void onEvent(LongEvent event, long sequence, boolean endOfBatch)
-    {
+    public void onEvent(LongEvent event, long sequence, boolean endOfBatch) {
         System.out.println("Event: " + event);
     }
 }

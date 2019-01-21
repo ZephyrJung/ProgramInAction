@@ -18,7 +18,7 @@ public class LongEventMain {
     }
 
     public static void translate(LongEvent event, long sequence, ByteBuffer buffer) {
-        event.set(buffer.getLong(0));
+        event.setValue(buffer.getLong(0));
     }
 
     public static void main(String[] args) throws Exception {
@@ -29,7 +29,7 @@ public class LongEventMain {
         int bufferSize = 1024;
 
         // Construct the Disruptor
-        Disruptor<LongEvent> disruptor = new Disruptor<>(new LongEventFactory(),bufferSize,threadFactory);
+        Disruptor<LongEvent> disruptor = new Disruptor<>(new LongEventFactory(), bufferSize, threadFactory);
 
         // Connect the handler
         disruptor.handleEventsWith(LongEventMain::handleEvent);

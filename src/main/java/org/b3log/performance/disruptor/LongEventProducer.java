@@ -21,9 +21,8 @@ public class LongEventProducer {
         try {
             LongEvent event = ringBuffer.get(sequence); // Get the entry in the Disruptor
             // for the sequence
-            event.set(bb.getLong(0));  // Fill with data
-        }
-        finally {
+            event.setValue(bb.getLong(0));  // Fill with data
+        } finally {
             ringBuffer.publish(sequence);
         }
     }

@@ -8,8 +8,7 @@ import com.lmax.disruptor.EventFactory;
  * Email : zephyrjung@126.com
  **/
 public class LongEventFactory implements EventFactory<LongEvent> {
-    public LongEvent newInstance()
-    {
+    public LongEvent newInstance() {
         return new LongEvent();
     }
 }

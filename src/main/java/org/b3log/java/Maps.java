@@ -30,7 +30,7 @@ public class Maps {
     }
 
     public static void testSynchronizedMap(){
-        Map<String,String> m = Collections.synchronizedMap(new HashMap<>());
+//        Map<String,String> m = Collections.synchronizedMap(new HashMap<>());
     }
 
 }
