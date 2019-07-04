@@ -90,6 +90,10 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.springframework.statemachine</groupId>
+            <artifactId>spring-statemachine-core</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.openjdk.jmh</groupId>
             <artifactId>jmh-core</artifactId>
             <version>1.5.1</version>
@@ -103,6 +107,11 @@
             <groupId>org.msgpack</groupId>
             <artifactId>msgpack</artifactId>
             <version>0.6.9</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.dubbo</groupId>
+            <artifactId>dubbo-common</artifactId>
+            <version>2.7.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>

@@ -57,8 +57,8 @@ public class LongEventMain {
             LongEventProducer producer = new LongEventProducer(ringBuffer);
 
             for (long l = 0; l < 1000000; l++) {
-                //producer.onData(l);
-                //Thread.sleep(1000);
+                producer.onData(l);
+//                Thread.sleep(1000);
                 productExecutor.execute(new Work(producer,l));
             }
 

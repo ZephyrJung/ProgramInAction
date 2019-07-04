@@ -39,10 +39,6 @@ public class P7_Reverse {
             x = x / 10;
         }
         result = result + x % 10;
-        if (result > Integer.MAX_VALUE || result < Integer.MIN_VALUE) {
-            return 0;
-        } else {
-            return result;
-        }
+        return result;
     }
 }
