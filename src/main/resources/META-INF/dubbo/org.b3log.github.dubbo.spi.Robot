@@ -1,2 +1,2 @@
-bumblebee = org.b3log.github.dubbo.spi.Bumblebee
-optimusPrime = org.b3log.github.dubbo.spi.OptimusPrime
+bumblebee = org.b3log.dubbo.spi.Bumblebee
+optimusPrime = org.b3log.dubbo.spi.OptimusPrime
