@@ -17,7 +17,6 @@ public class Application implements CommandLineRunner {
 
     public static void main(String[] args) {
         SpringApplication app = new SpringApplication(Application.class);
-        app.setWebEnvironment(false);
         app.run(args);
         System.exit(1);
     }
