@@ -1,13 +1,9 @@
 package org.b3log.zephyr.own_test;
 
-import org.b3log.zephyr.own_test.postConstructOfChildClass.Zephyr;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.stereotype.Component;
 
-import java.util.Map;
+import java.util.Objects;
 
 
 /**
@@ -19,12 +15,18 @@ import java.util.Map;
 @ComponentScan
 public class Application {
     public static void main(String[] args) {
-        ApplicationContext context =
+       /* ApplicationContext context =
                 new AnnotationConfigApplicationContext(Application.class);
         Map<String, Object> beanmap = context.getBeansWithAnnotation(Component.class);
         beanmap.keySet().forEach(System.out::println);
         System.out.println("---------");
         Map<String, Object> zephyr = context.getBeansWithAnnotation(Zephyr.class);
-        zephyr.keySet().forEach(System.out::println);
+        zephyr.keySet().forEach(System.out::println);*/
+
+        System.out.println(Objects.equals(1, null));
+        System.out.println(Objects.equals(1, Long.valueOf(222)));
+        System.out.println(Objects.equals(null, Long.valueOf(222)));
+        System.out.println(Objects.equals(null, 1));
+        System.out.println(Objects.equals(null, null));
     }
 }
