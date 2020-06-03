@@ -11,7 +11,7 @@ public class Variable {
         process(test);
         String test2 = "Hello";
         process2(test2);
-        Test test3 = new Test();
+        LocalTest test3 = new LocalTest();
         test3.setTest(2);
         process3(test3);
         System.out.println(test);
@@ -20,8 +20,8 @@ public class Variable {
         System.out.println(test3);
     }
 
-    private static void process3(Test test3) {
-        test3 = new Test();
+    private static void process3(LocalTest test3) {
+        test3 = new LocalTest();
         test3.setTest(3);
         System.out.println(test3);
     }
@@ -35,7 +35,7 @@ public class Variable {
     }
 }
 
-class Test {
+class LocalTest {
     private int test = 1;
 
     public int getTest() {
