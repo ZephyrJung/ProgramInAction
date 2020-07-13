@@ -9,6 +9,8 @@ public class Test {
         try {
             testError();
         }catch (Exception e){
+            return;
+        }finally{
             System.out.println("test 3");
         }
        testError2();
