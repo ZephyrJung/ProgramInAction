@@ -1,4 +1,4 @@
-package groovy.org.b3log.zephyr
+package org.b3log.zephyr
 
 
 import spock.lang.Specification
@@ -15,7 +15,6 @@ class SpockTest extends Specification {
     def "test"() {
         expect:
         family + " " + name == fullName
-        10.0+2.5-3.6 == 2.8 + 1.2
         where:
         name  | family || fullName
         "Bai" | "Li"   || "Li Bai"

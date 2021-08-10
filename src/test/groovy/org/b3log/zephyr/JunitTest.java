@@ -6,6 +6,7 @@ package groovy.org.b3log.zephyr;
  * Email : zephyrjung@126.com
  **/
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.Test;
@@ -20,6 +21,7 @@ import java.util.Collection;
  */
 @RunWith(Parameterized.class)
 @Slf4j
+@Data
 public class JunitTest {
 
     private String name;
